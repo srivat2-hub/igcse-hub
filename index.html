@@ -3,527 +3,419 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KGV IGCSE Master Study Hub 2026-2027</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>KGV Minimalist Study Planner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #0f172a;
-      --bg-card: #1e293b;
-      --bg-hover: #334155;
-      --border-color: #334155;
-      --accent-blue: #38bdf8;
-      --accent-purple: #c084fc;
-      --accent-green: #4ade80;
-      --accent-yellow: #facc15;
-      --accent-red: #f87171;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
+      --bg-app: #f8fafc;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --snack-color: #d97706;
+      --snack-bg: #fef3c7;
+      --lunch-color: #059669;
+      --lunch-bg: #d1fae5;
+      --afterschool-color: #4f46e5;
+      --afterschool-bg: #e0e7ff;
+      --status-red: #ef4444;
+      --status-yellow: #f59e0b;
+      --status-green: #10b981;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding-bottom: 60px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg-app); color: var(--text-main); min-height: 100vh; padding-bottom: 40px; }
 
-    /* Minimalist Top Nav */
+    /* Minimal Header */
     header {
-      background-color: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(8px);
-      position: sticky; top: 0; z-index: 100;
+      background: #ffffff;
       border-bottom: 1px solid var(--border-color);
-      padding: 8px 16px; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+      padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
-    .brand { font-weight: 800; font-size: 1.1rem; color: var(--accent-blue); letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
-    .nav-tabs { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0; scrollbar-width: none; }
-    .nav-tabs::-webkit-scrollbar { display: none; }
+    .brand { font-weight: 800; font-size: 1.1rem; color: var(--accent); }
+    .nav-tabs { display: flex; gap: 6px; }
     .nav-btn {
-      background: transparent; border: none; color: var(--text-muted); padding: 8px 12px;
-      border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap;
-      transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
+      background: transparent; border: none; color: var(--text-muted);
+      padding: 8px 14px; border-radius: 8px; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s ease;
     }
-    .nav-btn:hover { background: var(--bg-card); color: var(--text-main); }
-    .nav-btn.active { background: var(--accent-blue); color: #0f172a; font-weight: 700; }
+    .nav-btn:hover { background: var(--bg-app); color: var(--text-main); }
+    .nav-btn.active { background: var(--accent-light); color: var(--accent); font-weight: 700; }
 
-    /* Layout Containers */
-    .container { max-width: 1280px; margin: 0 auto; padding: 20px 16px; }
+    /* Main Container */
+    .container { max-width: 1000px; margin: 24px auto; padding: 0 16px; }
     .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Card Component */
+    /* Cards */
     .card {
-      background-color: var(--bg-card); border: 1px solid var(--border-color);
-      border-radius: 12px; padding: 18px; margin-bottom: 16px;
+      background: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: 14px; padding: 20px; margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.01);
     }
-    .card-title {
-      font-size: 1rem; font-weight: 700; margin-bottom: 12px;
-      display: flex; justify-content: space-between; align-items: center; color: var(--text-main);
-    }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
 
-    /* Grid Layouts */
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-
-    /* Home Page Quick Add & Sticky Notes */
-    .quick-add-bar { display: flex; gap: 8px; margin-bottom: 16px; }
-    .input-field {
-      flex: 1; background: var(--bg-main); border: 1px solid var(--border-color);
-      border-radius: 8px; padding: 10px 14px; color: var(--text-main); font-size: 0.9rem;
+    /* Form Controls */
+    .input-field, .select-field {
+      width: 100%; background: var(--bg-app); border: 1px solid var(--border-color);
+      border-radius: 8px; padding: 10px 12px; color: var(--text-main); font-size: 0.9rem;
+      transition: border 0.2s;
     }
-    .input-field:focus { outline: none; border-color: var(--accent-blue); }
+    .input-field:focus, .select-field:focus { outline: none; border-color: var(--accent); background: #ffffff; }
     .btn {
-      background: var(--accent-blue); border: none; color: #0f172a; font-weight: 700;
-      padding: 10px 18px; border-radius: 8px; cursor: pointer; transition: 0.2s ease;
+      background: var(--accent); color: white; border: none; font-weight: 700;
+      padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem;
     }
-    .btn:hover { opacity: 0.9; }
-    .btn-secondary { background: var(--bg-hover); color: var(--text-main); }
-    .btn-danger { background: var(--accent-red); color: white; }
+    .btn:hover { opacity: 0.95; }
+    .btn-danger { background: #fee2e2; color: #dc2626; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; }
 
-    /* Sub-tab Navigation */
-    .sub-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 16px; padding-bottom: 8px; }
-    .sub-btn { background: none; border: none; color: var(--text-muted); font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
-    .sub-btn.active { background: var(--bg-hover); color: var(--accent-blue); }
-
-    /* Traffic Light Buttons */
-    .traffic-lights { display: flex; gap: 4px; }
-    .tf-btn {
-      width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; opacity: 0.4; transition: 0.2s;
+    /* Calendar Grid */
+    .day-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    .day-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; }
+    .day-header { font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 10px; color: var(--accent); }
+    .event-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 10px; border-radius: 8px; margin-bottom: 6px; font-size: 0.85rem; background: var(--bg-app);
     }
-    .tf-btn.active { opacity: 1; transform: scale(1.15); border-color: white; }
-    .tf-red { background: var(--accent-red); }
-    .tf-yellow { background: var(--accent-yellow); }
-    .tf-green { background: var(--accent-green); }
-
-    /* Progress Bar */
-    .progress-bg { background: var(--bg-main); height: 8px; border-radius: 4px; overflow: hidden; margin: 8px 0; }
-    .progress-fill { background: var(--accent-green); height: 100%; width: 0%; transition: width 0.3s ease; }
-
-    /* Flashcard Flip Engine */
-    .flashcard-container { perspective: 1000px; height: 240px; margin: 20px 0; cursor: pointer; }
-    .flashcard {
-      width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s ease;
-      border: 1px solid var(--border-color); border-radius: 16px; background: var(--bg-card);
+    .badge {
+      padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
     }
-    .flashcard.flipped { transform: rotateY(180deg); }
-    .card-front, .card-back {
-      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center;
+    .badge-snack { background: var(--snack-bg); color: var(--snack-color); }
+    .badge-lunch { background: var(--lunch-bg); color: var(--lunch-color); }
+    .badge-afterschool { background: var(--afterschool-bg); color: var(--afterschool-color); }
+
+    /* Countdowns */
+    .countdown-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .countdown-card { background: var(--accent-light); border: 1px solid #dbeafe; padding: 14px; border-radius: 12px; text-align: center; }
+    .countdown-days { font-size: 1.8rem; font-weight: 800; color: var(--accent); margin: 4px 0; }
+    .countdown-label { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+    .countdown-sub { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Subject Status */
+    .subject-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px; border-bottom: 1px solid var(--border-color);
     }
-    .card-back { transform: rotateY(180deg); background: #1a233a; border-radius: 16px; }
+    .subject-row:last-child { border-bottom: none; }
+    .subject-name { font-weight: 600; font-size: 0.95rem; }
+    .status-group { display: flex; gap: 6px; }
+    .status-btn {
+      width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent;
+      cursor: pointer; opacity: 0.3; transition: all 0.2s;
+    }
+    .status-btn.active { opacity: 1; transform: scale(1.1); border-color: #000; }
+    .btn-red { background: var(--status-red); }
+    .btn-yellow { background: var(--status-yellow); }
+    .btn-green { background: var(--status-green); }
 
-    /* Timeline Game */
-    .timeline-item { background: var(--bg-main); border: 1px dashed var(--border-color); padding: 12px; border-radius: 8px; margin-bottom: 8px; cursor: grab; }
-
-    /* Modal Notes Editor */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
-    .modal.active { display: flex; }
-    .modal-body { background: var(--bg-card); border-radius: 12px; padding: 24px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
-
-    /* Pomodoro Widget */
-    .pomodoro-display { font-size: 3rem; font-weight: 800; text-align: center; color: var(--accent-blue); font-mono: monospace; margin: 12px 0; }
+    /* Homework Tasks */
+    .hw-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: var(--bg-app); border-radius: 8px; margin-bottom: 8px; }
+    .hw-item.done { opacity: 0.5; text-decoration: line-through; }
   </style>
 </head>
 <body>
 
-  <!-- Minimalist Top Navigation -->
   <header>
-    <div class="brand">⚡ KGV IGCSE</div>
+    <div class="brand">📘 KGV Study Hub</div>
     <nav class="nav-tabs">
-      <button class="nav-btn active" onclick="switchTab('home')">🏠 Home</button>
-      <button class="nav-btn" onclick="switchTab('math')">📐 Math</button>
-      <button class="nav-btn" onclick="switchTab('chem')">🧪 Chem</button>
-      <button class="nav-btn" onclick="switchTab('phys')">⚡ Phys</button>
-      <button class="nav-btn" onclick="switchTab('bio')">🧬 Bio</button>
-      <button class="nav-btn" onclick="switchTab('econ')">📈 Econ</button>
-      <button class="nav-btn" onclick="switchTab('history')">📜 History</button>
-      <button class="nav-btn" onclick="switchTab('english')">📖 English</button>
-      <button class="nav-btn" onclick="switchTab('spanish')">🇪🇸 Spanish</button>
-      <button class="nav-btn" onclick="switchTab('dt')">🛠️ DT</button>
-      <button class="nav-btn" onclick="switchTab('cards')">🎴 Cards</button>
-      <button class="nav-btn" onclick="switchTab('settings')">⚙️ Settings</button>
+      <button class="nav-btn active" onclick="showTab('calendar')">📅 Calendar</button>
+      <button class="nav-btn" onclick="showTab('countdowns')">⏳ Countdowns</button>
+      <button class="nav-btn" onclick="showTab('subjects')">📚 Subjects</button>
+      <button class="nav-btn" onclick="showTab('notes-hw')">📝 Notes & Homework</button>
     </nav>
   </header>
 
   <main class="container">
 
-    <!-- HOME TAB -->
-    <div id="tab-home" class="tab-content active">
-      <div class="quick-add-bar">
-        <input type="text" id="quickTaskInput" class="input-field" placeholder="⚡ Quick task or note for today..." onkeydown="if(event.key==='Enter') addQuickTask()">
-        <button class="btn" onclick="addQuickTask()">+ Add Task</button>
-      </div>
-
-      <div class="grid-3">
-        <!-- Pomodoro Check-in -->
-        <div class="card">
-          <div class="card-title">⏱️ Study Check-in & Pomodoro</div>
-          <div class="pomodoro-display" id="pomoTimer">25:00</div>
-          <div style="display:flex; gap:8px; justify-content:center; margin-bottom:12px;">
-            <button class="btn" onclick="startPomodoro()">Start</button>
-            <button class="btn btn-secondary" onclick="pausePomodoro()">Pause</button>
-            <button class="btn btn-secondary" onclick="resetPomodoro()">Reset</button>
-          </div>
-          <p style="font-size:0.85rem; color:var(--text-muted); text-align:center;">Weekly Target: <span id="weeklyStudyHours">4.5</span> / 15 Hours</p>
-        </div>
-
-        <!-- Daily Summary & Tutoring Banner -->
-        <div class="card">
-          <div class="card-title">📅 Today's Schedule & Reminders</div>
-          <ul id="scheduleList" style="list-style:none; font-size:0.9rem; line-height:1.8;">
-            <li>🇪🇸 Spanish Tutoring: Mon 6-7 PM, Thu 8-9 PM</li>
-            <li>📐 Math Tutoring: Tue 5-6 PM, Wed 5-6 PM</li>
-            <li>🥊 Boxing: Wed, Fri, Sat (7-8 PM)</li>
-            <li>🛠️ DT Section D Sprint Target: Finish by end of week</li>
-          </ul>
-        </div>
-
-        <!-- Boxing & Vegetarian Nutrition -->
-        <div class="card">
-          <div class="card-title">🥊 Sports & 🥗 Nutrition</div>
-          <p style="font-size:0.85rem; margin-bottom:8px;">Boxing Streak: <strong id="boxingStreak" style="color:var(--accent-green)">3 sessions/wk</strong></p>
-          <button class="btn btn-secondary" style="width:100%; margin-bottom:12px;" onclick="logBoxing()">✅ Check-in Boxing Session</button>
-          <hr style="border-color:var(--border-color); margin:12px 0;">
-          <p style="font-size:0.85rem; margin-bottom:4px;">Daily Vegetarian Protein Goal: <strong>100g</strong></p>
-          <div class="progress-bg"><div class="progress-fill" id="proteinProgress" style="width: 65%;"></div></div>
-          <div style="display:flex; gap:8px; margin-top:8px;">
-            <input type="number" id="proteinInput" class="input-field" placeholder="+ Protein (g)">
-            <button class="btn" onclick="addProtein()">Log</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Sticky Notes & Tasks -->
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">📌 Sticky Notes & Reminders</div>
-          <textarea id="stickyNotes" class="input-field" style="width:100%; height:120px;" placeholder="Write any quick study notes here..." oninput="saveStickyNotes()"></textarea>
-        </div>
-        <div class="card">
-          <div class="card-title">⏳ Major Milestones & Countdowns</div>
-          <ul id="countdownList" style="list-style:none; font-size:0.9rem; line-height:1.8;">
-            <li>✈️ November Trip (Nov 17-26): <strong style="color:var(--accent-yellow)">19 Days</strong></li>
-            <li>❄️ KGV Winter Break (Dec 12 - Jan 4)</li>
-            <li>📝 Mid-Jan Mock Exams (2 Weeks)</li>
-            <li>🎓 IGCSE Finals: April 29 - June 15, 2027</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- MATH TAB -->
-    <div id="tab-math" class="tab-content">
+    <!-- 1. WEEKLY CALENDAR TAB -->
+    <div id="tab-calendar" class="tab-content active">
       <div class="card">
-        <div class="card-title">📐 Edexcel Higher Tier Topics (Traffic Light Mastery)</div>
-        <div id="mathTopicsContainer"></div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">🎯 Adaptive Practice Engine</div>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Select a sub-topic and rate your response:</p>
-          <select id="mathTopicSelect" class="input-field" style="width:100%; margin-bottom:12px;"></select>
-          <div style="background:var(--bg-main); padding:16px; border-radius:8px; margin-bottom:12px;" id="mathQuestionBox">
-            Select a topic to practice questions.
-          </div>
-          <div style="display:flex; gap:12px;">
-            <button class="btn" style="background:var(--accent-green); flex:1;" onclick="scoreQuestion(true)">✅ Got it Right</button>
-            <button class="btn btn-danger" style="flex:1;" onclick="scoreQuestion(false)">❌ Got it Wrong</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">📝 Past Paper Error Log</div>
-          <div style="display:flex; gap:8px; margin-bottom:12px;">
-            <input type="text" id="mathPaperName" class="input-field" placeholder="Paper Code (e.g. 1HR May 2026)">
-            <input type="text" id="mathPaperScore" class="input-field" placeholder="Score (e.g. 82/100)">
-            <button class="btn" onclick="addMathPaper()">Save</button>
-          </div>
-          <div id="mathErrorLogList" style="font-size:0.85rem;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CHEMISTRY TAB -->
-    <div id="tab-chem" class="tab-content">
-      <div class="card">
-        <div class="card-title">🧪 Chemistry Sub-Topics (Priority 1)</div>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Overall Completion: <span id="chemPercent">0%</span></p>
-        <div class="progress-bg"><div class="progress-fill" id="chemProgressBar"></div></div>
-        <div id="chemTopicsContainer" class="grid-2" style="margin-top:16px;"></div>
-      </div>
-    </div>
-
-    <!-- PHYSICS TAB -->
-    <div id="tab-phys" class="tab-content">
-      <div class="card">
-        <div class="card-title">⚡ Physics Sub-Topics (Priority 2)</div>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Overall Completion: <span id="physPercent">0%</span></p>
-        <div class="progress-bg"><div class="progress-fill" id="physProgressBar"></div></div>
-        <div id="physTopicsContainer" class="grid-2" style="margin-top:16px;"></div>
-      </div>
-    </div>
-
-    <!-- BIOLOGY TAB -->
-    <div id="tab-bio" class="tab-content">
-      <div class="card">
-        <div class="card-title">🧬 Biology Sub-Topics (Priority 3)</div>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Overall Completion: <span id="bioPercent">0%</span></p>
-        <div class="progress-bg"><div class="progress-fill" id="bioProgressBar"></div></div>
-        <div id="bioTopicsContainer" class="grid-2" style="margin-top:16px;"></div>
-      </div>
-    </div>
-
-    <!-- ECONOMICS TAB -->
-    <div id="tab-econ" class="tab-content">
-      <div class="card">
-        <div class="card-title">📈 Economics Modules & Key Terms</div>
-        <div id="econTopicsContainer" class="grid-2"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">📖 Key Terms Dictionary Search</div>
-        <input type="text" id="econSearch" class="input-field" placeholder="Search terms (e.g. Opportunity Cost, Elasticity...)" oninput="filterEconTerms()">
-        <div id="econDictionary" style="margin-top:12px; font-size:0.9rem; line-height:1.6;"></div>
-      </div>
-    </div>
-
-    <!-- HISTORY TAB -->
-    <div id="tab-history" class="tab-content">
-      <div class="sub-nav">
-        <button class="sub-btn active" onclick="switchSubTab('hist-qs', this)">Question Log</button>
-        <button class="sub-btn" onclick="switchSubTab('hist-cards', this)">Flashcards</button>
-        <button class="sub-btn" onclick="switchSubTab('hist-game', this)">Timeline Game</button>
-      </div>
-
-      <div id="hist-qs" class="sub-tab-content">
-        <div class="card">
-          <div class="card-title">📝 Transcribed Exam Practice Responses</div>
-          <select id="histTopicSelect" class="input-field" style="margin-bottom:12px;">
-            <option>Change in China</option>
-            <option>Development of Dictatorship in Germany</option>
-            <option>Cause & Origin of First World War</option>
-            <option>The USA 1920-1941</option>
+        <div class="card-title">➕ Add Event to Weekly Calendar</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 2fr auto; gap: 10px; align-items: center;">
+          <select id="eventDay" class="select-field">
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+            <option>Sunday</option>
           </select>
-          <textarea id="histResponseText" class="input-field" style="width:100%; height:120px;" placeholder="Paste or transcribe your essay practice response here..."></textarea>
-          <button class="btn" style="margin-top:8px;" onclick="saveHistResponse()">Save Response</button>
+          <select id="eventCat" class="select-field">
+            <option value="Snack">Snack</option>
+            <option value="Lunch">Lunch</option>
+            <option value="After school">After school</option>
+          </select>
+          <input type="text" id="eventTitle" class="input-field" placeholder="Event details (e.g. Spanish Class 6-7 PM)">
+          <button class="btn" onclick="addCalendarEvent()">Add</button>
         </div>
       </div>
 
-      <div id="hist-cards" class="sub-tab-content" style="display:none;">
-        <div class="card">
-          <div class="card-title">🎴 Key Dates & Figures Deck</div>
-          <div id="histFlashcardsDeck"></div>
-        </div>
+      <div class="day-grid" id="weeklyGrid"></div>
+    </div>
+
+    <!-- 2. COUNTDOWNS TAB -->
+    <div id="tab-countdowns" class="tab-content">
+      <div class="card">
+        <div class="card-title">🌴 Trips, Holidays & Mocks</div>
+        <div class="countdown-grid" id="generalCountdowns"></div>
       </div>
 
-      <div id="hist-game" class="sub-tab-content" style="display:none;">
-        <div class="card">
-          <div class="card-title">🎮 Chronological Timeline Sorting Game</div>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Order the events chronologically:</p>
-          <div id="timelineContainer"></div>
-          <button class="btn" style="margin-top:12px;" onclick="checkTimelineOrder()">Check Order</button>
-        </div>
+      <div class="card">
+        <div class="card-title">🎓 IGCSE Final Exams Countdown</div>
+        <div class="countdown-grid" id="examCountdowns"></div>
       </div>
     </div>
 
-    <!-- ENGLISH TAB -->
-    <div id="tab-english" class="tab-content">
+    <!-- 3. SUBJECT STATUS TAB -->
+    <div id="tab-subjects" class="tab-content">
       <div class="card">
-        <div class="card-title">
-          <span>📖 Chekhov's <i>The Cherry Orchard</i> Analysis</span>
-          <a href="https://docs.google.com/document/d/13jyBiS4S-xPt4ERdQ3GI70eSvdYDieQ5oNAkv1JVXlY/edit?tab=t.0" target="_blank" class="btn btn-secondary" style="font-size:0.8rem;">📄 Open Google Doc</a>
-        </div>
-        <div class="grid-2">
-          <div>
-            <h4 style="color:var(--accent-blue); margin-bottom:8px;">Analytical Techniques & Effect Masterclass</h4>
-            <ul style="font-size:0.85rem; line-height:1.6; color:var(--text-muted);">
-              <li><strong>Snapping String Sound:</strong> Non-diegetic acoustic motif representing societal fracture between post-1861 aristocracy and merchant class.</li>
-              <li><strong>Nursery Symbolism:</strong> Retreat into childhood safety to avoid adult financial debt.</li>
-              <li><strong>Scattered Coins:</strong> Visual satire of aristocratic passivity and wastefulness.</li>
-            </ul>
-          </div>
-          <div>
-            <h4 style="color:var(--accent-purple); margin-bottom:8px;">Grade 9 Essay PEEL Structure</h4>
-            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;">
-              <strong>Point:</strong> Chekhov satirizes aristocratic inertia.<br>
-              <strong>Evidence:</strong> "I slept in here when I was a little girl..."<br>
-              <strong>Explanation:</strong> Regressive diction reflects inability to face real-world economics.<br>
-              <strong>Link:</strong> Mirroring post-emancipation feudal demise.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">💬 Interactive Quote Bank (From Google Doc)</div>
-        <div id="englishQuotesContainer" class="grid-2"></div>
+        <div class="card-title">🚦 Subject Confidence Status</div>
+        <div id="subjectList"></div>
       </div>
     </div>
 
-    <!-- SPANISH TAB -->
-    <div id="tab-spanish" class="tab-content">
-      <div class="sub-nav">
-        <button class="sub-btn active" onclick="switchSubTab('sp-hesham', this)">Hesham HW</button>
-        <button class="sub-btn" onclick="switchSubTab('sp-vocab', this)">20 Daily Churner</button>
-        <button class="sub-btn" onclick="switchSubTab('sp-game', this)">Conjugation Game</button>
-      </div>
-
-      <div id="sp-hesham" class="sub-tab-content">
+    <!-- 4. QUICK NOTES & HOMEWORK TAB -->
+    <div id="tab-notes-hw" class="tab-content">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <!-- Quick Notes -->
         <div class="card">
-          <div class="card-title">📝 Tutor Homework Status</div>
-          <div style="display:flex; gap:8px; margin-bottom:12px;">
-            <input type="text" id="heshamHwInput" class="input-field" placeholder="Weekly HW task description...">
-            <button class="btn" onclick="addHeshamHw()">Add HW</button>
-          </div>
-          <div id="heshamHwList"></div>
+          <div class="card-title">📌 Quick Notes</div>
+          <textarea id="quickNotes" class="input-field" style="height: 250px; resize: none;" placeholder="Jot down quick thoughts, revision links, or ideas..." oninput="saveNotes()"></textarea>
         </div>
-      </div>
 
-      <div id="sp-vocab" class="sub-tab-content" style="display:none;">
+        <!-- Homework Checklist -->
         <div class="card">
-          <div class="card-title">🔄 20 Vocab Daily Churner</div>
-          <div id="spanishVocabCard" class="flashcard-container" onclick="flipCard(this)">
-            <div class="flashcard">
-              <div class="card-front"><h3 id="spVocabFront">Cargar</h3></div>
-              <div class="card-back"><h3 id="spVocabBack">To load / carry</h3></div>
-            </div>
+          <div class="card-title">📚 Homework Tasks</div>
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <input type="text" id="hwInput" class="input-field" placeholder="New homework task..." onkeydown="if(event.key==='Enter') addHomework()">
+            <button class="btn" onclick="addHomework()">Add</button>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <button class="btn btn-secondary" onclick="nextVocabCard()">Next Card ➔</button>
-            <span style="font-size:0.85rem; color:var(--text-muted);">Streak: <strong>5 Days</strong></span>
-          </div>
+          <div id="hwList" style="max-height: 200px; overflow-y: auto;"></div>
         </div>
-      </div>
-
-      <div id="sp-game" class="sub-tab-content" style="display:none;">
-        <div class="card">
-          <div class="card-title">🎮 Verb Conjugation & Irregulars Trainer</div>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Conjugate "Tener" (Yo form - Present):</p>
-          <input type="text" id="verbAnswer" class="input-field" placeholder="Type answer...">
-          <button class="btn" style="margin-top:8px;" onclick="checkVerbConjugation()">Check Answer</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- DT TAB -->
-    <div id="tab-dt" class="tab-content">
-      <div class="card">
-        <div class="card-title">🛠️ Design & Technology NEA Section D Sprint Tracker</div>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Goal: Finish Section D & slide improvements by end of this week.</p>
-        <input type="text" id="dtSlidesLink" class="input-field" style="width:100%; margin-bottom:12px;" placeholder="Paste Google Slides Share Link..." onchange="saveDtSlidesLink()">
-        <div id="dtFeedbackLog" style="margin-top:12px;"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">🪵 Properties of Materials Deck</div>
-        <div id="dtMaterialsContainer" class="grid-3"></div>
-      </div>
-    </div>
-
-    <!-- FLASHCARDS TAB -->
-    <div id="tab-cards" class="tab-content">
-      <div class="card">
-        <div class="card-title">🎴 Master Flashcards Hub</div>
-        <select id="cardDeckFilter" class="input-field" style="margin-bottom:16px;" onchange="loadDeck()">
-          <option value="mixed">🔀 All Subjects (Mixed)</option>
-          <option value="spanish">🇪🇸 Spanish Vocab</option>
-          <option value="history">📜 History Dates</option>
-          <option value="econ">📈 Economics Terms</option>
-          <option value="english">📖 English Quotes</option>
-          <option value="dt">🛠️ DT Materials</option>
-        </select>
-
-        <div id="masterFlashcard" class="flashcard-container" onclick="flipCard(this)">
-          <div class="flashcard">
-            <div class="card-front"><h3 id="masterCardFront">Select a deck</h3></div>
-            <div class="card-back"><p id="masterCardBack">Answer will show here</p></div>
-          </div>
-        </div>
-
-        <div style="display:flex; gap:12px; justify-content:center;">
-          <button class="btn btn-secondary" onclick="prevMasterCard()">⬅️ Previous</button>
-          <button class="btn" onclick="nextMasterCard()">Next Card ➔</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SETTINGS TAB -->
-    <div id="tab-settings" class="tab-content">
-      <div class="card">
-        <div class="card-title">⚙️ App Settings & Data Backup</div>
-        <div style="display:flex; gap:12px; margin-bottom:16px;">
-          <button class="btn" onclick="exportData()">📥 Export Data (JSON)</button>
-          <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Import Data</button>
-          <input type="file" id="importFile" style="display:none;" onchange="importData(event)">
-        </div>
-        <button class="btn btn-danger" onclick="resetAllData()">⚠️ Reset All Saved Data</button>
       </div>
     </div>
 
   </main>
 
-  <!-- Science Sub-topic Notes Modal -->
-  <div id="notesModal" class="modal">
-    <div class="modal-body">
-      <div class="card-title">
-        <span id="modalTopicTitle">Sub-topic Notes</span>
-        <button class="btn btn-secondary" style="padding:4px 8px;" onclick="closeNotesModal()">✖</button>
-      </div>
-      <textarea id="modalNotesArea" class="input-field" style="width:100%; height:200px; margin-bottom:12px;"></textarea>
-      <button class="btn" onclick="saveSubTopicNotes()">Save Notes</button>
-    </div>
-  </div>
-
   <script>
-    // Global State with LocalStorage
-    let state = JSON.parse(localStorage.getItem('kgv_igcse_state')) || {
-      tasks: [],
-      sticky: '',
-      protein: 65,
-      boxingStreak: 3,
-      studyHours: 4.5,
-      heshamHw: [],
-      dtSlidesLink: '',
-      mathErrorLog: [],
-      scienceNotes: {}
+    // Initial App State
+    const defaultData = {
+      events: [
+        { id: 1, day: 'Monday', cat: 'After school', title: 'Spanish Class (6-7 PM)' },
+        { id: 2, day: 'Tuesday', cat: 'After school', title: 'Math Tutoring (5-6 PM)' },
+        { id: 3, day: 'Wednesday', cat: 'After school', title: 'Math Tutoring (5-6 PM)' },
+        { id: 4, day: 'Wednesday', cat: 'After school', title: 'Boxing (7-8 PM)' },
+        { id: 5, day: 'Thursday', cat: 'After school', title: 'Spanish Class (8-9 PM)' },
+        { id: 6, day: 'Friday', cat: 'After school', title: 'Boxing (7-8 PM)' },
+        { id: 7, day: 'Saturday', cat: 'After school', title: 'Boxing (7-8 PM)' }
+      ],
+      subjects: {
+        'Design & Technology (DT)': 'yellow',
+        'Mathematics Higher': 'green',
+        'Economics': 'red',
+        'History': 'yellow',
+        'First Language English': 'green',
+        'World Literature': 'red',
+        'Spanish': 'yellow',
+        'Double Science': 'red'
+      },
+      homework: [
+        { id: 1, title: 'Finish DT Section D slides', done: false }
+      ],
+      notes: ''
     };
 
-    function saveState() {
-      localStorage.setItem('kgv_igcse_state', JSON.stringify(state));
+    // Load State from LocalStorage
+    let appData = JSON.parse(localStorage.getItem('kgv_simple_app_data')) || defaultData;
+
+    function saveData() {
+      localStorage.setItem('kgv_simple_app_data', JSON.stringify(appData));
     }
 
-    // Navigation Switches
-    function switchTab(tabId) {
+    // Navigation
+    function showTab(tabId) {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       event.target.classList.add('active');
       document.getElementById('tab-' + tabId).classList.add('active');
     }
 
-    function switchSubTab(subId, btn) {
-      const parent = btn.parentElement;
-      parent.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const container = parent.parentElement;
-      container.querySelectorAll('.sub-tab-content').forEach(c => c.style.display = 'none');
-      document.getElementById(subId).style.display = 'block';
+    // Render Calendar
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    function renderCalendar() {
+      const grid = document.getElementById('weeklyGrid');
+      grid.innerHTML = '';
+
+      days.forEach(day => {
+        const dayEvents = appData.events.filter(e => e.day === day);
+        let eventsHtml = dayEvents.map(e => `
+          <div class="event-item">
+            <div>
+              <span class="badge badge-${e.cat.toLowerCase().replace(' ', '')}">${e.cat}</span>
+              <span style="margin-left: 6px;">${e.title}</span>
+            </div>
+            <button class="btn-danger" onclick="deleteEvent(${e.id})">✕</button>
+          </div>
+        `).join('');
+
+        grid.innerHTML += `
+          <div class="day-card">
+            <div class="day-header">${day}</div>
+            ${eventsHtml || '<p style="font-size: 0.8rem; color: var(--text-muted);">No events</p>'}
+          </div>
+        `;
+      });
     }
 
-    // Quick Add Tasks & Notes
-    function addQuickTask() {
-      const val = document.getElementById('quickTaskInput').value.trim();
-      if (!val) return;
-      state.tasks.push(val);
-      saveState();
-      document.getElementById('quickTaskInput').value = '';
-      alert('Task added successfully!');
+    function addCalendarEvent() {
+      const day = document.getElementById('eventDay').value;
+      const cat = document.getElementById('eventCat').value;
+      const title = document.getElementById('eventTitle').value.trim();
+      if (!title) return;
+
+      appData.events.push({ id: Date.now(), day, cat, title });
+      saveData();
+      renderCalendar();
+      document.getElementById('eventTitle').value = '';
     }
 
-    function saveStickyNotes() {
-      state.sticky = document.getElementById('stickyNotes').value;
-      saveState();
+    function deleteEvent(id) {
+      appData.events = appData.events.filter(e => e.id !== id);
+      saveData();
+      renderCalendar();
     }
 
-    // Pomodoro Timer
-    let pomoInterval;
-    let pomoTime = 25 * 60;
-    function startPomodoro() {
-      clearInterval(pomoInterval);
-      pomoInterval = setInterval
+    // Render Countdowns
+    const targetDates = [
+      { name: '✈️ November Trip', date: '2026-11-17' },
+      { name: '❄️ KGV Winter Break', date: '2026-12-12' },
+      { name: '📝 Mid-Jan Mock Exams', date: '2027-01-11' },
+      { name: '📖 English First Lang', date: '2027-04-29' },
+      { name: '📚 World Literature', date: '2027-05-07' },
+      { name: '🧪 Science (Double Award)', date: '2027-05-11' },
+      { name: '📈 Economics Paper 1R', date: '2027-05-13' },
+      { name: '📐 Math Higher Paper 1HR', date: '2027-05-14' },
+      { name: '📜 History Depth Studies', date: '2027-05-20' },
+      { name: '🇪🇸 Spanish Listening/Reading', date: '2027-06-09' },
+      { name: '🛠️ Design & Technology', date: '2027-06-15' }
+    ];
+
+    function renderCountdowns() {
+      const generalBox = document.getElementById('generalCountdowns');
+      const examBox = document.getElementById('examCountdowns');
+      generalBox.innerHTML = '';
+      examBox.innerHTML = '';
+
+      const now = new Date();
+
+      targetDates.forEach(item => {
+        const target = new Date(item.date);
+        const diffTime = target - now;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const daysText = diffDays > 0 ? `${diffDays} Days` : 'Started/Passed';
+
+        const cardHtml = `
+          <div class="countdown-card">
+            <div class="countdown-label">${item.name}</div>
+            <div class="countdown-days">${daysText}</div>
+            <div class="countdown-sub">${item.date}</div>
+          </div>
+        `;
+
+        if (item.name.includes('Trip') || item.name.includes('Break') || item.name.includes('Mock')) {
+          generalBox.innerHTML += cardHtml;
+        } else {
+          examBox.innerHTML += cardHtml;
+        }
+      });
+    }
+
+    // Render Subject Status
+    function renderSubjects() {
+      const list = document.getElementById('subjectList');
+      list.innerHTML = '';
+
+      Object.keys(appData.subjects).forEach(sub => {
+        const status = appData.subjects[sub];
+        list.innerHTML += `
+          <div class="subject-row">
+            <span class="subject-name">${sub}</span>
+            <div class="status-group">
+              <button class="status-btn btn-red ${status === 'red' ? 'active' : ''}" onclick="setSubjectStatus('${sub}', 'red')"></button>
+              <button class="status-btn btn-yellow ${status === 'yellow' ? 'active' : ''}" onclick="setSubjectStatus('${sub}', 'yellow')"></button>
+              <button class="status-btn btn-green ${status === 'green' ? 'active' : ''}" onclick="setSubjectStatus('${sub}', 'green')"></button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function setSubjectStatus(sub, color) {
+      appData.subjects[sub] = color;
+      saveData();
+      renderSubjects();
+    }
+
+    // Notes & Homework
+    function saveNotes() {
+      appData.notes = document.getElementById('quickNotes').value;
+      saveData();
+    }
+
+    function renderHomework() {
+      const list = document.getElementById('hwList');
+      list.innerHTML = '';
+
+      appData.homework.forEach(hw => {
+        list.innerHTML += `
+          <div class="hw-item ${hw.done ? 'done' : ''}">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" ${hw.done ? 'checked' : ''} onchange="toggleHw(${hw.id})">
+              <span>${hw.title}</span>
+            </div>
+            <button class="btn-danger" onclick="deleteHw(${hw.id})">✕</button>
+          </div>
+        `;
+      });
+    }
+
+    function addHomework() {
+      const title = document.getElementById('hwInput').value.trim();
+      if (!title) return;
+      appData.homework.push({ id: Date.now(), title, done: false });
+      saveData();
+      renderHomework();
+      document.getElementById('hwInput').value = '';
+    }
+
+    function toggleHw(id) {
+      const hw = appData.homework.find(h => h.id === id);
+      if (hw) hw.done = !hw.done;
+      saveData();
+      renderHomework();
+    }
+
+    function deleteHw(id) {
+      appData.homework = appData.homework.filter(h => h.id !== id);
+      saveData();
+      renderHomework();
+    }
+
+    // Initialize Page
+    window.onload = function() {
+      renderCalendar();
+      renderCountdowns();
+      renderSubjects();
+      renderHomework();
+      document.getElementById('quickNotes').value = appData.notes || '';
+    };
+  </script>
+</body>
+</html>
