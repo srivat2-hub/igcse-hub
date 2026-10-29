@@ -1,1408 +1,529 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KGV IGCSE Master Study Hub & Personal Tracker</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-              800: '#3730a3',
-              900: '#1e1b4b',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- React 18, Babel, Chart.js & Canvas-Confetti CDNs -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <!-- Google Fonts: Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
+  <title>KGV IGCSE Master Study Hub 2026-2027</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #080c14;
-      color: #f1f5f9;
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-hover: #334155;
+      --border-color: #334155;
+      --accent-blue: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-green: #4ade80;
+      --accent-yellow: #facc15;
+      --accent-red: #f87171;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
     }
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding-bottom: 60px; }
+
+    /* Minimalist Top Nav */
+    header {
+      background-color: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 16px; display: flex; align-items: center; justify-content: space-between;
     }
-    ::-webkit-scrollbar-track {
-      background: #0f172a;
+    .brand { font-weight: 800; font-size: 1.1rem; color: var(--accent-blue); letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+    .nav-tabs { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0; scrollbar-width: none; }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-btn {
+      background: transparent; border: none; color: var(--text-muted); padding: 8px 12px;
+      border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+      transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
     }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 9999px;
+    .nav-btn:hover { background: var(--bg-card); color: var(--text-main); }
+    .nav-btn.active { background: var(--accent-blue); color: #0f172a; font-weight: 700; }
+
+    /* Layout Containers */
+    .container { max-width: 1280px; margin: 0 auto; padding: 20px 16px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Card Component */
+    .card {
+      background-color: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: 12px; padding: 18px; margin-bottom: 16px;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
+    .card-title {
+      font-size: 1rem; font-weight: 700; margin-bottom: 12px;
+      display: flex; justify-content: space-between; align-items: center; color: var(--text-main);
     }
-    .glass-card {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+
+    /* Grid Layouts */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+
+    /* Home Page Quick Add & Sticky Notes */
+    .quick-add-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+    .input-field {
+      flex: 1; background: var(--bg-main); border: 1px solid var(--border-color);
+      border-radius: 8px; padding: 10px 14px; color: var(--text-main); font-size: 0.9rem;
     }
-    .flip-card {
-      perspective: 1000px;
+    .input-field:focus { outline: none; border-color: var(--accent-blue); }
+    .btn {
+      background: var(--accent-blue); border: none; color: #0f172a; font-weight: 700;
+      padding: 10px 18px; border-radius: 8px; cursor: pointer; transition: 0.2s ease;
     }
-    .flip-card-inner {
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
+    .btn:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--bg-hover); color: var(--text-main); }
+    .btn-danger { background: var(--accent-red); color: white; }
+
+    /* Sub-tab Navigation */
+    .sub-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 16px; padding-bottom: 8px; }
+    .sub-btn { background: none; border: none; color: var(--text-muted); font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+    .sub-btn.active { background: var(--bg-hover); color: var(--accent-blue); }
+
+    /* Traffic Light Buttons */
+    .traffic-lights { display: flex; gap: 4px; }
+    .tf-btn {
+      width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; opacity: 0.4; transition: 0.2s;
     }
-    .flip-card.flipped .flip-card-inner {
-      transform: rotateY(180deg);
+    .tf-btn.active { opacity: 1; transform: scale(1.15); border-color: white; }
+    .tf-red { background: var(--accent-red); }
+    .tf-yellow { background: var(--accent-yellow); }
+    .tf-green { background: var(--accent-green); }
+
+    /* Progress Bar */
+    .progress-bg { background: var(--bg-main); height: 8px; border-radius: 4px; overflow: hidden; margin: 8px 0; }
+    .progress-fill { background: var(--accent-green); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+    /* Flashcard Flip Engine */
+    .flashcard-container { perspective: 1000px; height: 240px; margin: 20px 0; cursor: pointer; }
+    .flashcard {
+      width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s ease;
+      border: 1px solid var(--border-color); border-radius: 16px; background: var(--bg-card);
     }
-    .flip-card-front, .flip-card-back {
-      backface-visibility: hidden;
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .card-front, .card-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center;
     }
-    .flip-card-back {
-      transform: rotateY(180deg);
-    }
+    .card-back { transform: rotateY(180deg); background: #1a233a; border-radius: 16px; }
+
+    /* Timeline Game */
+    .timeline-item { background: var(--bg-main); border: 1px dashed var(--border-color); padding: 12px; border-radius: 8px; margin-bottom: 8px; cursor: grab; }
+
+    /* Modal Notes Editor */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-body { background: var(--bg-card); border-radius: 12px; padding: 24px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
+
+    /* Pomodoro Widget */
+    .pomodoro-display { font-size: 3rem; font-weight: 800; text-align: center; color: var(--accent-blue); font-mono: monospace; margin: 12px 0; }
   </style>
 </head>
-<body class="min-h-screen text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
-  <div id="root"></div>
+<body>
 
-  <script type="text/babel">
-    const { useState, useEffect, useMemo, useRef } = React;
+  <!-- Minimalist Top Navigation -->
+  <header>
+    <div class="brand">⚡ KGV IGCSE</div>
+    <nav class="nav-tabs">
+      <button class="nav-btn active" onclick="switchTab('home')">🏠 Home</button>
+      <button class="nav-btn" onclick="switchTab('math')">📐 Math</button>
+      <button class="nav-btn" onclick="switchTab('chem')">🧪 Chem</button>
+      <button class="nav-btn" onclick="switchTab('phys')">⚡ Phys</button>
+      <button class="nav-btn" onclick="switchTab('bio')">🧬 Bio</button>
+      <button class="nav-btn" onclick="switchTab('econ')">📈 Econ</button>
+      <button class="nav-btn" onclick="switchTab('history')">📜 History</button>
+      <button class="nav-btn" onclick="switchTab('english')">📖 English</button>
+      <button class="nav-btn" onclick="switchTab('spanish')">🇪🇸 Spanish</button>
+      <button class="nav-btn" onclick="switchTab('dt')">🛠️ DT</button>
+      <button class="nav-btn" onclick="switchTab('cards')">🎴 Cards</button>
+      <button class="nav-btn" onclick="switchTab('settings')">⚙️ Settings</button>
+    </nav>
+  </header>
 
-    // --- PRELOADED DATA STRUCTURES ---
+  <main class="container">
 
-    const PRELOADED_EXAMS = [
-      { id: 'ex-1', title: 'First Language English (Oral & Paper 12)', code: '0500/12', date: '2027-04-29', time: 'PM', duration: '2h', subject: 'English' },
-      { id: 'ex-2', title: 'World Literature Paper 22 (Unseen)', code: '0408/22', date: '2027-05-07', time: 'PM', duration: '1h 15m', subject: 'World Lit' },
-      { id: 'ex-3', title: 'Science (Double Award) Paper 1BR', code: 'R4SD0/1BR', date: '2027-05-11', time: 'AM', duration: '2h', subject: 'Double Science' },
-      { id: 'ex-4', title: 'Economics Paper 1R Microeconomics', code: 'R4EC1/01R', date: '2027-05-13', time: 'PM', duration: '1h 30m', subject: 'Economics' },
-      { id: 'ex-5', title: 'World Literature Paper 32 (The Cherry Orchard)', code: '0408/32', date: '2027-05-13', time: 'PM', duration: '1h 30m', subject: 'World Lit' },
-      { id: 'ex-6', title: 'Mathematics A Paper 1HR Higher Tier', code: 'R4MA1/1HR', date: '2027-05-14', time: 'AM', duration: '2h', subject: 'Math' },
-      { id: 'ex-7', title: 'First Language English Paper 22', code: '0500/22', date: '2027-05-14', time: 'AM', duration: '2h', subject: 'English' },
-      { id: 'ex-8', title: 'Science (Double Award) Paper 1CR', code: 'R4SD0/1CR', date: '2027-05-18', time: 'PM', duration: '2h', subject: 'Double Science' },
-      { id: 'ex-9', title: 'History Paper 1R Depth Studies', code: 'R4HI1/1R', date: '2027-05-20', time: 'AM', duration: '1h 30m', subject: 'History' },
-      { id: 'ex-10', title: 'Science (Double Award) Paper 1PR', code: 'R4SD0/1PR', date: '2027-05-25', time: 'AM', duration: '2h', subject: 'Double Science' },
-      { id: 'ex-11', title: 'Economics Paper 2R Macroeconomics', code: 'R4EC1/02R', date: '2027-05-25', time: 'PM', duration: '1h 30m', subject: 'Economics' },
-      { id: 'ex-12', title: 'Mathematics A Paper 2HR Higher Tier', code: 'R4MA1/2HR', date: '2027-05-27', time: 'AM', duration: '2h', subject: 'Math' },
-      { id: 'ex-13', title: 'History Paper 2R Investigation & Breadth', code: 'R4HI1/2R', date: '2027-05-28', time: 'AM', duration: '1h 30m', subject: 'History' },
-      { id: 'ex-14', title: 'Spanish Paper 1R Listening & 2R Reading/Writing', code: 'R4SP1/01R & 02R', date: '2027-06-09', time: 'AM', duration: '2h 20m', subject: 'Spanish' },
-      { id: 'ex-15', title: 'Design & Technology Written Paper', code: '8552/W', date: '2027-06-15', time: 'PM', duration: '2h', subject: 'DT' }
-    ];
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-content active">
+      <div class="quick-add-bar">
+        <input type="text" id="quickTaskInput" class="input-field" placeholder="⚡ Quick task or note for today..." onkeydown="if(event.key==='Enter') addQuickTask()">
+        <button class="btn" onclick="addQuickTask()">+ Add Task</button>
+      </div>
 
-    const PRELOADED_HOLIDAYS = [
-      { id: 'hol-0', title: 'Challenge Week Break (Sprint Goal)', start: '2026-11-02', end: '2026-11-08', category: 'Sprint', color: 'bg-indigo-900/80 border-indigo-500 text-indigo-200' },
-      { id: 'hol-1', title: 'November Vacation Trip', start: '2026-11-17', end: '2026-11-26', category: 'Trip', color: 'bg-purple-900/70 border-purple-500/50 text-purple-200' },
-      { id: 'hol-2', title: 'KGV Winter Holidays 2026-27', start: '2026-12-12', end: '2027-01-04', category: 'Holiday', color: 'bg-amber-900/70 border-amber-500/50 text-amber-200' },
-      { id: 'hol-3', title: 'KGV Mid-Jan Mock Exams', start: '2027-01-11', end: '2027-01-22', category: 'Mocks', color: 'bg-rose-900/80 border-rose-500/60 text-rose-200' },
-      { id: 'hol-4', title: 'Chinese New Year Break', start: '2027-02-05', end: '2027-02-12', category: 'Holiday', color: 'bg-red-900/70 border-red-500/50 text-red-200' },
-      { id: 'hol-5', title: 'KGV Spring / Easter Break', start: '2027-03-26', end: '2027-04-05', category: 'Holiday', color: 'bg-emerald-900/70 border-emerald-500/50 text-emerald-200' }
-    ];
+      <div class="grid-3">
+        <!-- Pomodoro Check-in -->
+        <div class="card">
+          <div class="card-title">⏱️ Study Check-in & Pomodoro</div>
+          <div class="pomodoro-display" id="pomoTimer">25:00</div>
+          <div style="display:flex; gap:8px; justify-content:center; margin-bottom:12px;">
+            <button class="btn" onclick="startPomodoro()">Start</button>
+            <button class="btn btn-secondary" onclick="pausePomodoro()">Pause</button>
+            <button class="btn btn-secondary" onclick="resetPomodoro()">Reset</button>
+          </div>
+          <p style="font-size:0.85rem; color:var(--text-muted); text-align:center;">Weekly Target: <span id="weeklyStudyHours">4.5</span> / 15 Hours</p>
+        </div>
 
-    const RECURRING_CLASSES = [
-      { id: 'rec-1', day: 'Monday', time: '18:00 - 19:00', subject: 'Spanish', title: 'Spanish Tutoring' },
-      { id: 'rec-2', day: 'Tuesday', time: '17:00 - 18:00', subject: 'Math', title: 'Math Higher Practice' },
-      { id: 'rec-3', day: 'Wednesday', time: '17:00 - 18:00', subject: 'Math', title: 'Math Higher Practice' },
-      { id: 'rec-4', day: 'Wednesday', time: '19:00 - 20:00', subject: 'Boxing', title: 'Boxing Fitness Session' },
-      { id: 'rec-5', day: 'Thursday', time: '20:00 - 21:00', subject: 'Spanish', title: 'Spanish Evening Session' },
-      { id: 'rec-6', day: 'Friday', time: '19:00 - 20:00', subject: 'Boxing', title: 'Boxing Conditioning' },
-      { id: 'rec-7', day: 'Saturday', time: '19:00 - 20:00', subject: 'Boxing', title: 'Boxing Weekend Session' }
-    ];
+        <!-- Daily Summary & Tutoring Banner -->
+        <div class="card">
+          <div class="card-title">📅 Today's Schedule & Reminders</div>
+          <ul id="scheduleList" style="list-style:none; font-size:0.9rem; line-height:1.8;">
+            <li>🇪🇸 Spanish Tutoring: Mon 6-7 PM, Thu 8-9 PM</li>
+            <li>📐 Math Tutoring: Tue 5-6 PM, Wed 5-6 PM</li>
+            <li>🥊 Boxing: Wed, Fri, Sat (7-8 PM)</li>
+            <li>🛠️ DT Section D Sprint Target: Finish by end of week</li>
+          </ul>
+        </div>
 
-    const MATH_HIGHER_TOPICS = [
-      { category: 'Number', items: ['Surds & Rationalisation', 'Indices (Fractional & Negative)', 'Standard Form & Accuracy', 'Upper & Lower Bounds (Calculations)', 'Percentages & Compound Interest', 'Ratios & Direct/Inverse Proportion'] },
-      { category: 'Algebra & Equations', items: ['Quadratic Formula & Completing Square', 'Simultaneous Equations (Linear & Non-Linear)', 'Algebraic Fractions (Simplifying & Solving)', 'Rearranging Complex Formulas', 'Inequalities (Linear & Quadratic Shading)', 'Algebraic Proof & Identities'] },
-      { category: 'Functions & Graphs', items: ['Composite Functions f(g(x))', 'Inverse Functions f⁻¹(x)', 'Transformations of Graphs y=f(x+a)', 'Cubic, Reciprocal & Exponential Graphs', 'Tangents & Rates of Change', 'Iteration & Numerical Solutions'] },
-      { category: 'Geometry & Trigonometry', items: ['3D Trigonometry & Pythagoras', 'Sine & Cosine Rule (Non-right angled)', 'Area of Triangle (½ ab sin C)', 'Circle Theorems & Geometric Proofs', 'Bearings & Map Scales', 'Similar Shapes (Length, Area, Volume Scale Factors)'] },
-      { category: 'Vectors & Transformations', items: ['Vector Geometry & Ratio Proofs', 'Column Vectors & Magnitude', 'Enlargements (Negative & Fractional Scale Factor)', 'Rotations, Reflections & Translations'] },
-      { category: 'Statistics & Probability', items: ['Cumulative Frequency & Box Plots', 'Histograms (Unequal Class Widths & Frequency Density)', 'Conditional Probability & Tree Diagrams', 'Venn Diagrams & Set Notation P(A∩B)'] }
-    ];
+        <!-- Boxing & Vegetarian Nutrition -->
+        <div class="card">
+          <div class="card-title">🥊 Sports & 🥗 Nutrition</div>
+          <p style="font-size:0.85rem; margin-bottom:8px;">Boxing Streak: <strong id="boxingStreak" style="color:var(--accent-green)">3 sessions/wk</strong></p>
+          <button class="btn btn-secondary" style="width:100%; margin-bottom:12px;" onclick="logBoxing()">✅ Check-in Boxing Session</button>
+          <hr style="border-color:var(--border-color); margin:12px 0;">
+          <p style="font-size:0.85rem; margin-bottom:4px;">Daily Vegetarian Protein Goal: <strong>100g</strong></p>
+          <div class="progress-bg"><div class="progress-fill" id="proteinProgress" style="width: 65%;"></div></div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <input type="number" id="proteinInput" class="input-field" placeholder="+ Protein (g)">
+            <button class="btn" onclick="addProtein()">Log</button>
+          </div>
+        </div>
+      </div>
 
-    const INITIAL_DT_FEEDBACK = [
-      { id: 'sl-1', slideNum: '14', title: 'Section D: Material Selection & Hardness Testing', summary: 'Comparison table between Acrylic and MDF for prototype casing.', comment: 'Good initial tests, but rationale for why Acrylic withstands impact needs quantitative data. Add stress-strain values for Grade 9 standard.', status: 'Fixes Pending', checklist: [ { text: 'Add numerical hardness test values', done: false }, { text: 'Explain cost vs durability trade-off', done: true } ] },
-      { id: 'sl-2', slideNum: '18', title: 'Section D: CAD Exploded Assembly Rendering', summary: '3D Fusion 360 exploded view with joint callouts.', comment: 'Renders are sharp. Ensure all screw thread dimensions (M3/M4) are clearly labeled on callout bubbles.', status: 'Grade 9 Standard', checklist: [ { text: 'Label M3/M4 thread tolerances', done: true }, { text: 'Export high-res PNG render', done: true } ] }
-    ];
+      <!-- Quick Sticky Notes & Tasks -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">📌 Sticky Notes & Reminders</div>
+          <textarea id="stickyNotes" class="input-field" style="width:100%; height:120px;" placeholder="Write any quick study notes here..." oninput="saveStickyNotes()"></textarea>
+        </div>
+        <div class="card">
+          <div class="card-title">⏳ Major Milestones & Countdowns</div>
+          <ul id="countdownList" style="list-style:none; font-size:0.9rem; line-height:1.8;">
+            <li>✈️ November Trip (Nov 17-26): <strong style="color:var(--accent-yellow)">19 Days</strong></li>
+            <li>❄️ KGV Winter Break (Dec 12 - Jan 4)</li>
+            <li>📝 Mid-Jan Mock Exams (2 Weeks)</li>
+            <li>🎓 IGCSE Finals: April 29 - June 15, 2027</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-    const INITIAL_SPANISH_VOCAB = [
-      { id: 'v-1', es: 'El medio ambiente', en: 'The environment', theme: 'Global Dimension', learned: false },
-      { id: 'v-2', es: 'Desarrollar', en: 'To develop', theme: 'General', learned: true },
-      { id: 'v-3', es: 'El calentamiento global', en: 'Global warming', theme: 'Global Dimension', learned: false },
-      { id: 'v-4', es: 'Sin embargo', en: 'However / Nevertheless', theme: 'Connectives', learned: true },
-      { id: 'v-5', es: 'Aprovechar', en: 'To take advantage of / make the most of', theme: 'Verbs', learned: false },
-      { id: 'v-6', es: 'El paro / el desempleo', en: 'Unemployment', theme: 'Work & Future', learned: false },
-      { id: 'v-7', es: 'Por lo tanto', en: 'Therefore', theme: 'Connectives', learned: true },
-      { id: 'v-8', es: 'Fomentar', en: 'To encourage / promote', theme: 'Verbs', learned: false },
-      { id: 'v-9', es: 'Las comodidades', en: 'Amenities / Comforts', theme: 'Town & Area', learned: false },
-      { id: 'v-10', es: 'A pesar de que', en: 'In spite of the fact that', theme: 'Connectives', learned: false },
-      { id: 'v-11', es: 'El desarrollo sostenible', en: 'Sustainable development', theme: 'Global Dimension', learned: false },
-      { id: 'v-12', es: 'Un desafío', en: 'A challenge', theme: 'General', learned: true },
-      { id: 'v-13', es: 'Mejorar', en: 'To improve', theme: 'Verbs', learned: true },
-      { id: 'v-14', es: 'Perjudicial', en: 'Harmful / Detrimental', theme: 'Health', learned: false },
-      { id: 'v-15', es: 'Aumentar', en: 'To increase', theme: 'Verbs', learned: false },
-      { id: 'v-16', es: 'La pobreza', en: 'Poverty', theme: 'Global Issues', learned: false },
-      { id: 'v-17', es: 'De todos modos', en: 'Anyhow / In any case', theme: 'Connectives', learned: false },
-      { id: 'v-18', es: 'Exigir', en: 'To demand / require', theme: 'Verbs', learned: false },
-      { id: 'v-19', es: 'El aprendizaje', en: 'Learning / Apprenticeship', theme: 'Education', learned: false },
-      { id: 'v-20', es: 'Tener en cuenta', en: 'To keep in mind / take into account', theme: 'Phrases', learned: false }
-    ];
+    <!-- MATH TAB -->
+    <div id="tab-math" class="tab-content">
+      <div class="card">
+        <div class="card-title">📐 Edexcel Higher Tier Topics (Traffic Light Mastery)</div>
+        <div id="mathTopicsContainer"></div>
+      </div>
 
-    const VEGETARIAN_PROTEIN_SOURCES = [
-      { food: 'Seitan (Wheat Gluten)', protein: '25g per 100g', note: 'Highest protein density vegetarian source.' },
-      { food: 'Tempeh (Fermented Soy)', protein: '19g per 100g', note: 'Great for gut health & solid texture.' },
-      { food: 'Paneer / Hard Cottage Cheese', protein: '18g per 100g', note: 'Rich in casein protein for night recovery.' },
-      { food: 'Extra Firm Tofu', protein: '17g per 100g', note: 'Versatile; pan-fry with soy sauce.' },
-      { food: 'Whey or Plant Protein Powder', protein: '24g per scoop (30g)', note: 'Fastest post-boxing recovery shake.' },
-      { food: 'Edamame (Green Soybeans)', protein: '11g per 100g', note: 'Easy high-protein snack.' },
-      { food: 'Greek Yogurt (0% Fat)', protein: '10g per 100g', note: 'Pair with seeds/nuts for breakfast.' },
-      { food: 'Cooked Lentils / Dal', protein: '9g per 100g', note: 'Combine with rice for complete amino acid profile.' },
-      { food: 'Chickpeas / Hummus', protein: '8g per 100g', note: 'Great snack with cucumbers.' }
-    ];
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🎯 Adaptive Practice Engine</div>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Select a sub-topic and rate your response:</p>
+          <select id="mathTopicSelect" class="input-field" style="width:100%; margin-bottom:12px;"></select>
+          <div style="background:var(--bg-main); padding:16px; border-radius:8px; margin-bottom:12px;" id="mathQuestionBox">
+            Select a topic to practice questions.
+          </div>
+          <div style="display:flex; gap:12px;">
+            <button class="btn" style="background:var(--accent-green); flex:1;" onclick="scoreQuestion(true)">✅ Got it Right</button>
+            <button class="btn btn-danger" style="flex:1;" onclick="scoreQuestion(false)">❌ Got it Wrong</button>
+          </div>
+        </div>
 
-    const CHERRY_ORCHARD_QUOTES = [
-      { id: 'q-1', quote: '“Oh, my orchard! After the dark, rainy autumn and the cold winter, you are young again, and full of happiness!”', speaker: 'Ranevskaya', act: 'Act 1', theme: 'Nostalgia & Denial', note: 'Ranevskaya romanticizes the past to escape her pressing financial collapse.' },
-      { id: 'q-2', quote: '“I bought the estate where my father and grandfather were slaves...”', speaker: 'Lopakhin', theme: 'Social Mobility & Class Shift', act: 'Act 3', note: 'Climax of dramatic irony and social change: the former serf now owns the aristocratic property.' },
-      { id: 'q-3', quote: '“All Russia is our orchard. The earth is great and beautiful, and there are many wonderful places in it.”', speaker: 'Trofimov', theme: 'Idealism & Future', act: 'Act 2', note: 'Trofimov represents the revolutionary youth rejecting nostalgic attachment to physical wealth.' },
-      { id: 'q-4', quote: '“My tender, beautiful orchard... My life, my youth, my happiness, goodbye! Goodbye!”', speaker: 'Ranevskaya', theme: 'Loss & Passing Era', act: 'Act 4', note: 'Lyrical lamentation as the sound of the axe chopping down cherry trees echoes off-stage.' }
-    ];
+        <div class="card">
+          <div class="card-title">📝 Past Paper Error Log</div>
+          <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <input type="text" id="mathPaperName" class="input-field" placeholder="Paper Code (e.g. 1HR May 2026)">
+            <input type="text" id="mathPaperScore" class="input-field" placeholder="Score (e.g. 82/100)">
+            <button class="btn" onclick="addMathPaper()">Save</button>
+          </div>
+          <div id="mathErrorLogList" style="font-size:0.85rem;"></div>
+        </div>
+      </div>
+    </div>
 
-    const CHEKHOV_TECHNIQUES = [
-      { title: 'The Sound of a Breaking String (Off-Stage Sound)', desc: 'In Act 2 & Act 4, a mysterious sound like a snapped string dying away symbolizes the rupture of old Russian feudal society and approaching doom.' },
-      { title: 'Subtext, Pauses & Indirect Action', desc: 'Characters frequently talk past each other or speak of trivialities (billiards, weather) to suppress deep emotional pain and financial panic.' },
-      { title: 'Tragicomedy Blend', desc: 'Chekhov mixes tragic loss (eviction, drowning of son) with comic absurdity (Gayev talking to bookcases, Epihodov\'s squeaky shoes).' },
-      { title: 'Symbolism of the Cherry Orchard', desc: 'The orchard represents useless aesthetic beauty, feudal exploitation, nostalgic paralysis, and inevitable modernisation.' }
-    ];
+    <!-- CHEMISTRY TAB -->
+    <div id="tab-chem" class="tab-content">
+      <div class="card">
+        <div class="card-title">🧪 Chemistry Sub-Topics (Priority 1)</div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Overall Completion: <span id="chemPercent">0%</span></p>
+        <div class="progress-bg"><div class="progress-fill" id="chemProgressBar"></div></div>
+        <div id="chemTopicsContainer" class="grid-2" style="margin-top:16px;"></div>
+      </div>
+    </div>
 
-    // SVG Icon Component helper
-    const Icon = ({ name, className = "w-5 h-5" }) => {
-      const icons = {
-        home: <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />,
-        calculator: <path d="M9 7h6m-6 4h6m-6 4h3m-6 4h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />,
-        atom: <path d="M12 12m-2 0a2 2 0 104 0a2 2 0 10-4 0M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 4c-3.314 0-6 2.686-6 6s2.686 6 6 6 6-2.686 6-6-2.686-6-6-6z" />,
-        wrench: <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.9 6.91a2.12 2.12 0 01-3-3l6.91-6.9a6 6 0 017.94-7.94l-3.76 3.76z" />,
-        landmark: <path d="M3 21h18M3 10h18M5 10v11M9 10v11M13 10v11M17 10v11M12 3L2 8h20L12 3z" />,
-        feather: <path d="M14 4.5V14a2 2 0 01-2 2H4m10-11.5L18.5 7M14 4.5L9.5 9m9-2v9a2 2 0 01-2 2H9.5" />,
-        globe: <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />,
-        dumbbell: <path d="M6 5v14M18 5v14M4 8h4M16 8h4M4 16h4M16 16h4M8 12h8" />,
-        calendar: <path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />,
-        check: <path d="M5 13l4 4L19 7" />,
-        plus: <path d="M12 4v16m8-8H4" />,
-        trash: <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />,
-        play: <path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
-        pause: <path d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />,
-        reset: <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />,
-        fire: <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-      };
-      return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          {icons[name] || icons.home}
-        </svg>
-      );
+    <!-- PHYSICS TAB -->
+    <div id="tab-phys" class="tab-content">
+      <div class="card">
+        <div class="card-title">⚡ Physics Sub-Topics (Priority 2)</div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Overall Completion: <span id="physPercent">0%</span></p>
+        <div class="progress-bg"><div class="progress-fill" id="physProgressBar"></div></div>
+        <div id="physTopicsContainer" class="grid-2" style="margin-top:16px;"></div>
+      </div>
+    </div>
+
+    <!-- BIOLOGY TAB -->
+    <div id="tab-bio" class="tab-content">
+      <div class="card">
+        <div class="card-title">🧬 Biology Sub-Topics (Priority 3)</div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Overall Completion: <span id="bioPercent">0%</span></p>
+        <div class="progress-bg"><div class="progress-fill" id="bioProgressBar"></div></div>
+        <div id="bioTopicsContainer" class="grid-2" style="margin-top:16px;"></div>
+      </div>
+    </div>
+
+    <!-- ECONOMICS TAB -->
+    <div id="tab-econ" class="tab-content">
+      <div class="card">
+        <div class="card-title">📈 Economics Modules & Key Terms</div>
+        <div id="econTopicsContainer" class="grid-2"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📖 Key Terms Dictionary Search</div>
+        <input type="text" id="econSearch" class="input-field" placeholder="Search terms (e.g. Opportunity Cost, Elasticity...)" oninput="filterEconTerms()">
+        <div id="econDictionary" style="margin-top:12px; font-size:0.9rem; line-height:1.6;"></div>
+      </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div id="tab-history" class="tab-content">
+      <div class="sub-nav">
+        <button class="sub-btn active" onclick="switchSubTab('hist-qs', this)">Question Log</button>
+        <button class="sub-btn" onclick="switchSubTab('hist-cards', this)">Flashcards</button>
+        <button class="sub-btn" onclick="switchSubTab('hist-game', this)">Timeline Game</button>
+      </div>
+
+      <div id="hist-qs" class="sub-tab-content">
+        <div class="card">
+          <div class="card-title">📝 Transcribed Exam Practice Responses</div>
+          <select id="histTopicSelect" class="input-field" style="margin-bottom:12px;">
+            <option>Change in China</option>
+            <option>Development of Dictatorship in Germany</option>
+            <option>Cause & Origin of First World War</option>
+            <option>The USA 1920-1941</option>
+          </select>
+          <textarea id="histResponseText" class="input-field" style="width:100%; height:120px;" placeholder="Paste or transcribe your essay practice response here..."></textarea>
+          <button class="btn" style="margin-top:8px;" onclick="saveHistResponse()">Save Response</button>
+        </div>
+      </div>
+
+      <div id="hist-cards" class="sub-tab-content" style="display:none;">
+        <div class="card">
+          <div class="card-title">🎴 Key Dates & Figures Deck</div>
+          <div id="histFlashcardsDeck"></div>
+        </div>
+      </div>
+
+      <div id="hist-game" class="sub-tab-content" style="display:none;">
+        <div class="card">
+          <div class="card-title">🎮 Chronological Timeline Sorting Game</div>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Order the events chronologically:</p>
+          <div id="timelineContainer"></div>
+          <button class="btn" style="margin-top:12px;" onclick="checkTimelineOrder()">Check Order</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGLISH TAB -->
+    <div id="tab-english" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span>📖 Chekhov's <i>The Cherry Orchard</i> Analysis</span>
+          <a href="https://docs.google.com/document/d/13jyBiS4S-xPt4ERdQ3GI70eSvdYDieQ5oNAkv1JVXlY/edit?tab=t.0" target="_blank" class="btn btn-secondary" style="font-size:0.8rem;">📄 Open Google Doc</a>
+        </div>
+        <div class="grid-2">
+          <div>
+            <h4 style="color:var(--accent-blue); margin-bottom:8px;">Analytical Techniques & Effect Masterclass</h4>
+            <ul style="font-size:0.85rem; line-height:1.6; color:var(--text-muted);">
+              <li><strong>Snapping String Sound:</strong> Non-diegetic acoustic motif representing societal fracture between post-1861 aristocracy and merchant class.</li>
+              <li><strong>Nursery Symbolism:</strong> Retreat into childhood safety to avoid adult financial debt.</li>
+              <li><strong>Scattered Coins:</strong> Visual satire of aristocratic passivity and wastefulness.</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color:var(--accent-purple); margin-bottom:8px;">Grade 9 Essay PEEL Structure</h4>
+            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;">
+              <strong>Point:</strong> Chekhov satirizes aristocratic inertia.<br>
+              <strong>Evidence:</strong> "I slept in here when I was a little girl..."<br>
+              <strong>Explanation:</strong> Regressive diction reflects inability to face real-world economics.<br>
+              <strong>Link:</strong> Mirroring post-emancipation feudal demise.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💬 Interactive Quote Bank (From Google Doc)</div>
+        <div id="englishQuotesContainer" class="grid-2"></div>
+      </div>
+    </div>
+
+    <!-- SPANISH TAB -->
+    <div id="tab-spanish" class="tab-content">
+      <div class="sub-nav">
+        <button class="sub-btn active" onclick="switchSubTab('sp-hesham', this)">Hesham HW</button>
+        <button class="sub-btn" onclick="switchSubTab('sp-vocab', this)">20 Daily Churner</button>
+        <button class="sub-btn" onclick="switchSubTab('sp-game', this)">Conjugation Game</button>
+      </div>
+
+      <div id="sp-hesham" class="sub-tab-content">
+        <div class="card">
+          <div class="card-title">📝 Tutor Homework Status</div>
+          <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <input type="text" id="heshamHwInput" class="input-field" placeholder="Weekly HW task description...">
+            <button class="btn" onclick="addHeshamHw()">Add HW</button>
+          </div>
+          <div id="heshamHwList"></div>
+        </div>
+      </div>
+
+      <div id="sp-vocab" class="sub-tab-content" style="display:none;">
+        <div class="card">
+          <div class="card-title">🔄 20 Vocab Daily Churner</div>
+          <div id="spanishVocabCard" class="flashcard-container" onclick="flipCard(this)">
+            <div class="flashcard">
+              <div class="card-front"><h3 id="spVocabFront">Cargar</h3></div>
+              <div class="card-back"><h3 id="spVocabBack">To load / carry</h3></div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <button class="btn btn-secondary" onclick="nextVocabCard()">Next Card ➔</button>
+            <span style="font-size:0.85rem; color:var(--text-muted);">Streak: <strong>5 Days</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="sp-game" class="sub-tab-content" style="display:none;">
+        <div class="card">
+          <div class="card-title">🎮 Verb Conjugation & Irregulars Trainer</div>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Conjugate "Tener" (Yo form - Present):</p>
+          <input type="text" id="verbAnswer" class="input-field" placeholder="Type answer...">
+          <button class="btn" style="margin-top:8px;" onclick="checkVerbConjugation()">Check Answer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DT TAB -->
+    <div id="tab-dt" class="tab-content">
+      <div class="card">
+        <div class="card-title">🛠️ Design & Technology NEA Section D Sprint Tracker</div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Goal: Finish Section D & slide improvements by end of this week.</p>
+        <input type="text" id="dtSlidesLink" class="input-field" style="width:100%; margin-bottom:12px;" placeholder="Paste Google Slides Share Link..." onchange="saveDtSlidesLink()">
+        <div id="dtFeedbackLog" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🪵 Properties of Materials Deck</div>
+        <div id="dtMaterialsContainer" class="grid-3"></div>
+      </div>
+    </div>
+
+    <!-- FLASHCARDS TAB -->
+    <div id="tab-cards" class="tab-content">
+      <div class="card">
+        <div class="card-title">🎴 Master Flashcards Hub</div>
+        <select id="cardDeckFilter" class="input-field" style="margin-bottom:16px;" onchange="loadDeck()">
+          <option value="mixed">🔀 All Subjects (Mixed)</option>
+          <option value="spanish">🇪🇸 Spanish Vocab</option>
+          <option value="history">📜 History Dates</option>
+          <option value="econ">📈 Economics Terms</option>
+          <option value="english">📖 English Quotes</option>
+          <option value="dt">🛠️ DT Materials</option>
+        </select>
+
+        <div id="masterFlashcard" class="flashcard-container" onclick="flipCard(this)">
+          <div class="flashcard">
+            <div class="card-front"><h3 id="masterCardFront">Select a deck</h3></div>
+            <div class="card-back"><p id="masterCardBack">Answer will show here</p></div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:center;">
+          <button class="btn btn-secondary" onclick="prevMasterCard()">⬅️ Previous</button>
+          <button class="btn" onclick="nextMasterCard()">Next Card ➔</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" class="tab-content">
+      <div class="card">
+        <div class="card-title">⚙️ App Settings & Data Backup</div>
+        <div style="display:flex; gap:12px; margin-bottom:16px;">
+          <button class="btn" onclick="exportData()">📥 Export Data (JSON)</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Import Data</button>
+          <input type="file" id="importFile" style="display:none;" onchange="importData(event)">
+        </div>
+        <button class="btn btn-danger" onclick="resetAllData()">⚠️ Reset All Saved Data</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Science Sub-topic Notes Modal -->
+  <div id="notesModal" class="modal">
+    <div class="modal-body">
+      <div class="card-title">
+        <span id="modalTopicTitle">Sub-topic Notes</span>
+        <button class="btn btn-secondary" style="padding:4px 8px;" onclick="closeNotesModal()">✖</button>
+      </div>
+      <textarea id="modalNotesArea" class="input-field" style="width:100%; height:200px; margin-bottom:12px;"></textarea>
+      <button class="btn" onclick="saveSubTopicNotes()">Save Notes</button>
+    </div>
+  </div>
+
+  <script>
+    // Global State with LocalStorage
+    let state = JSON.parse(localStorage.getItem('kgv_igcse_state')) || {
+      tasks: [],
+      sticky: '',
+      protein: 65,
+      boxingStreak: 3,
+      studyHours: 4.5,
+      heshamHw: [],
+      dtSlidesLink: '',
+      mathErrorLog: [],
+      scienceNotes: {}
     };
 
-    // Helper hook for LocalStorage persistence
-    function useLocalStorage(key, initialValue) {
-      const [storedValue, setStoredValue] = useState(() => {
-        try {
-          const item = window.localStorage.getItem(key);
-          return item ? JSON.parse(item) : initialValue;
-        } catch (error) {
-          console.error(error);
-          return initialValue;
-        }
-      });
-
-      useEffect(() => {
-        try {
-          window.localStorage.setItem(key, JSON.stringify(storedValue));
-        } catch (error) {
-          console.error(error);
-        }
-      }, [key, storedValue]);
-
-      return [storedValue, setStoredValue];
+    function saveState() {
+      localStorage.setItem('kgv_igcse_state', JSON.stringify(state));
     }
 
-    // --- MAIN REACT APPLICATION ---
-    function App() {
-      // DEFAULT LANDING TAB: Quick Add & Sticky Notes
-      const [activeTab, setActiveTab] = useState('landing');
-
-      // Global Persistent State
-      const [tasks, setTasks] = useLocalStorage('kgv_tasks_v2', [
-        { id: 't-1', title: 'Complete DT Section D hardness test table', subject: 'DT', priority: 'High', completed: false, date: '2026-10-28' },
-        { id: 't-2', title: 'Solve 2024 Math Paper 1HR Q1-Q10', subject: 'Math', priority: 'High', completed: true, date: '2026-10-28' },
-        { id: 't-3', title: 'Memorize 20 Spanish vocab cards', subject: 'Spanish', priority: 'Medium', completed: false, date: '2026-10-28' }
-      ]);
-
-      const [stickyNotes, setStickyNotes] = useLocalStorage('kgv_sticky_notes', '📌 Remember to finish Chemistry organic equations before Friday.\n📌 Prepare DT slides 14-16 for teacher review.\n📌 Bring boxing gloves for Wed 7 PM session!');
-
-      // Math Traffic Light state: topic -> 'red' | 'yellow' | 'green'
-      const [mathTrafficLights, setMathTrafficLights] = useLocalStorage('kgv_math_tl', {
-        'Surds & Rationalisation': 'yellow',
-        'Indices (Fractional & Negative)': 'green',
-        'Quadratic Formula & Completing Square': 'green',
-        'Composite Functions f(g(x))': 'yellow',
-        '3D Trigonometry & Pythagoras': 'red',
-        'Vector Geometry & Ratio Proofs': 'red',
-        'Histograms (Unequal Class Widths & Frequency Density)': 'yellow'
-      });
-
-      // Science subtopics checkboxes
-      const [scienceChecklist, setScienceChecklist] = useLocalStorage('kgv_science_checks', {
-        'Chem-1': true, 'Chem-2': false, 'Chem-3': false, 'Chem-4': true,
-        'Phys-1': true, 'Phys-2': false, 'Phys-3': true,
-        'Bio-1': true, 'Bio-2': true, 'Bio-3': false
-      });
-
-      // DT Slide Feedback
-      const [dtSlides, setDtSlides] = useLocalStorage('kgv_dt_slides', INITIAL_DT_FEEDBACK);
-
-      // History Essays
-      const [historyEssays, setHistoryEssays] = useLocalStorage('kgv_history_essays', [
-        { id: 'he-1', topic: 'Change in China 1945-89', title: 'To what extent was the Great Leap Forward the main cause of economic hardship in China?', markScheme: '16', responseText: 'The Great Leap Forward (1958-1962) was undoubtedly a catastrophic economic initiative under Mao Zedong...', teacherMark: '14/16', teacherFeedback: 'Excellent specific evidence (backyard furnaces, lysenkoism). Include a stronger counter-argument regarding Sino-Soviet split impact.' }
-      ]);
-
-      // Spanish Vocab & Streak
-      const [vocabList, setVocabList] = useLocalStorage('kgv_spanish_vocab', INITIAL_SPANISH_VOCAB);
-      const [vocabStreak, setVocabStreak] = useLocalStorage('kgv_spanish_streak', 5);
-
-      // Sports Boxing & Protein
-      const [boxingLogs, setBoxingLogs] = useLocalStorage('kgv_boxing_logs', [
-        { date: '2026-10-21', attended: true },
-        { date: '2026-10-23', attended: true },
-        { date: '2026-10-24', attended: true },
-        { date: '2026-10-28', attended: false }
-      ]);
-
-      const [proteinIntake, setProteinIntake] = useLocalStorage('kgv_protein_today', 65);
-      const dailyProteinGoal = 100;
-
-      // Toast feedback
-      const [toastMsg, setToastMsg] = useState('');
-      const triggerToast = (msg) => {
-        setToastMsg(msg);
-        setTimeout(() => setToastMsg(''), 3000);
-      };
-
-      // Confetti celebration
-      const triggerConfetti = () => {
-        if (window.confetti) {
-          window.confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
-        }
-      };
-
-      return (
-        <div className="flex flex-col min-h-screen">
-          
-          {/* TOAST POPUP */}
-          {toastMsg && (
-            <div className="fixed bottom-5 right-5 z-50 bg-indigo-600 text-white px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 text-xs font-bold animate-bounce border border-indigo-400">
-              <Icon name="check" className="w-4 h-4" />
-              {toastMsg}
-            </div>
-          )}
-
-          {/* MAIN APP HEADER */}
-          <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between h-16">
-                
-                {/* Branding */}
-                <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('landing')}>
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center font-black text-white text-base shadow-lg shadow-indigo-500/20">
-                    KGV
-                  </div>
-                  <div>
-                    <h1 className="text-sm sm:text-base font-black text-white tracking-tight flex items-center gap-2">
-                      IGCSE Master Study Hub
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">2026-27</span>
-                    </h1>
-                    <p className="text-[11px] text-indigo-400 font-medium hidden sm:block">Personal Academic & Life Tracker</p>
-                  </div>
-                </div>
-
-                {/* Primary Nav Bar */}
-                <nav className="hidden lg:flex items-center space-x-1">
-                  {[
-                    { id: 'landing', label: 'Daily To-Do', icon: 'home' },
-                    { id: 'math', label: 'Math Higher', icon: 'calculator' },
-                    { id: 'science', label: 'Double Science', icon: 'atom' },
-                    { id: 'dt', label: 'DT Sprint & Slides', icon: 'wrench' },
-                    { id: 'history', label: 'History Essays', icon: 'landmark' },
-                    { id: 'worldlit', label: 'World Lit', icon: 'feather' },
-                    { id: 'spanish', label: 'Spanish 20 Vocab', icon: 'globe' },
-                    { id: 'sports_nutrition', label: 'Boxing & Protein', icon: 'dumbbell' },
-                    { id: 'calendar', label: 'Countdowns', icon: 'calendar' }
-                  ].map(tab => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                        activeTab === tab.id 
-                          ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' 
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                      }`}
-                    >
-                      <Icon name={tab.icon} className="w-3.5 h-3.5" />
-                      {tab.label}
-                    </button>
-                  ))}
-                </nav>
-
-                <div className="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-800 text-indigo-300 border border-slate-700">
-                  Year 11 Final Sprint
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile Scrollable Nav */}
-            <div className="lg:hidden flex overflow-x-auto px-3 py-2 space-x-2 border-t border-slate-800/80 bg-slate-950/90 scrollbar-none">
-              {[
-                { id: 'landing', label: 'Daily To-Do', icon: 'home' },
-                { id: 'math', label: 'Math', icon: 'calculator' },
-                { id: 'science', label: 'Science', icon: 'atom' },
-                { id: 'dt', label: 'DT Slides', icon: 'wrench' },
-                { id: 'history', label: 'History', icon: 'landmark' },
-                { id: 'worldlit', label: 'World Lit', icon: 'feather' },
-                { id: 'spanish', label: 'Spanish', icon: 'globe' },
-                { id: 'sports_nutrition', label: 'Boxing & Protein', icon: 'dumbbell' },
-                { id: 'calendar', label: 'Calendar', icon: 'calendar' }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap ${
-                    activeTab === tab.id 
-                      ? 'bg-indigo-600 text-white' 
-                      : 'text-slate-400 hover:bg-slate-800'
-                  }`}
-                >
-                  <Icon name={tab.icon} className="w-3.5 h-3.5" />
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </header>
-
-          {/* MAIN CONTENT CONTAINERS */}
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            {activeTab === 'landing' && (
-              <LandingView 
-                tasks={tasks} 
-                setTasks={setTasks} 
-                stickyNotes={stickyNotes} 
-                setStickyNotes={setStickyNotes}
-                proteinIntake={proteinIntake}
-                dailyProteinGoal={dailyProteinGoal}
-                triggerToast={triggerToast}
-                triggerConfetti={triggerConfetti}
-                onNavigate={(t) => setActiveTab(t)}
-              />
-            )}
-
-            {activeTab === 'math' && (
-              <MathView 
-                mathTrafficLights={mathTrafficLights} 
-                setMathTrafficLights={setMathTrafficLights}
-                triggerToast={triggerToast}
-              />
-            )}
-
-            {activeTab === 'science' && (
-              <ScienceView 
-                scienceChecklist={scienceChecklist}
-                setScienceChecklist={setScienceChecklist}
-                triggerToast={triggerToast}
-              />
-            )}
-
-            {activeTab === 'dt' && (
-              <DtView 
-                dtSlides={dtSlides}
-                setDtSlides={setDtSlides}
-                triggerToast={triggerToast}
-                triggerConfetti={triggerConfetti}
-              />
-            )}
-
-            {activeTab === 'history' && (
-              <HistoryView 
-                historyEssays={historyEssays}
-                setHistoryEssays={setHistoryEssays}
-                triggerToast={triggerToast}
-              />
-            )}
-
-            {activeTab === 'worldlit' && (
-              <WorldLitView triggerToast={triggerToast} />
-            )}
-
-            {activeTab === 'spanish' && (
-              <SpanishView 
-                vocabList={vocabList}
-                setVocabList={setVocabList}
-                vocabStreak={vocabStreak}
-                setVocabStreak={setVocabStreak}
-                triggerToast={triggerToast}
-                triggerConfetti={triggerConfetti}
-              />
-            )}
-
-            {activeTab === 'sports_nutrition' && (
-              <SportsNutritionView 
-                boxingLogs={boxingLogs}
-                setBoxingLogs={setBoxingLogs}
-                proteinIntake={proteinIntake}
-                setProteinIntake={setProteinIntake}
-                dailyProteinGoal={dailyProteinGoal}
-                triggerToast={triggerToast}
-                triggerConfetti={triggerConfetti}
-              />
-            )}
-
-            {activeTab === 'calendar' && (
-              <CalendarView exams={PRELOADED_EXAMS} holidays={PRELOADED_HOLIDAYS} classes={RECURRING_CLASSES} />
-            )}
-          </main>
-
-          <footer className="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-            KGV IGCSE Master Study Hub & Personal Tracker • Built for High Academic Achievement & Life Balance
-          </footer>
-        </div>
-      );
+    // Navigation Switches
+    function switchTab(tabId) {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
     }
 
-    // ==========================================
-    // 1. DEFAULT LANDING VIEW: QUICK TO-DO & STICKY NOTES
-    // ==========================================
-    function LandingView({ tasks, setTasks, stickyNotes, setStickyNotes, proteinIntake, dailyProteinGoal, triggerToast, triggerConfetti, onNavigate }) {
-      const [newTaskTitle, setNewTaskTitle] = useState('');
-      const [newTaskSubj, setNewTaskSubj] = useState('DT');
-      const [newTaskPriority, setNewTaskPriority] = useState('High');
-
-      const handleQuickAdd = (e) => {
-        e.preventDefault();
-        if (!newTaskTitle.trim()) return;
-        const entry = {
-          id: 't-' + Date.now(),
-          title: newTaskTitle.trim(),
-          subject: newTaskSubj,
-          priority: newTaskPriority,
-          completed: false,
-          date: new Date().toISOString().split('T')[0]
-        };
-        setTasks([entry, ...tasks]);
-        setNewTaskTitle('');
-        triggerToast('Task added instantly!');
-      };
-
-      const toggleTask = (id) => {
-        const updated = tasks.map(t => {
-          if (t.id === id) {
-            const nextState = !t.completed;
-            if (nextState) triggerConfetti();
-            return { ...t, completed: nextState };
-          }
-          return t;
-        });
-        setTasks(updated);
-      };
-
-      const deleteTask = (id) => {
-        setTasks(tasks.filter(t => t.id !== id));
-      };
-
-      // Today's Date info
-      const todayStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-
-      return (
-        <div className="space-y-6">
-          {/* AT-A-GLANCE SUMMARY BANNER */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/30 p-6 shadow-2xl">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-              <div>
-                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider block mb-1">Welcome Back • {todayStr}</span>
-                <h2 className="text-2xl font-black text-white">IGCSE Daily Command Center</h2>
-                <p className="text-xs text-slate-300">Quick-Add Homework, Sticky Pad Notes, and Daily Fitness Check</p>
-              </div>
-
-              {/* Quick Status Chips */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full lg:w-auto text-xs">
-                <div className="bg-slate-900/90 p-2.5 rounded-xl border border-indigo-500/30 text-center">
-                  <span className="block text-[10px] text-slate-400 uppercase font-bold">DT Sprint Target</span>
-                  <span className="font-bold text-amber-400">Section D & Slides</span>
-                </div>
-
-                <div className="bg-slate-900/90 p-2.5 rounded-xl border border-indigo-500/30 text-center">
-                  <span className="block text-[10px] text-slate-400 uppercase font-bold">Protein Today</span>
-                  <span className="font-bold text-emerald-400">{proteinIntake} / {dailyProteinGoal}g</span>
-                </div>
-
-                <div className="bg-slate-900/90 p-2.5 rounded-xl border border-indigo-500/30 text-center">
-                  <span className="block text-[10px] text-slate-400 uppercase font-bold">Upcoming Exam</span>
-                  <span className="font-bold text-rose-400">Apr 29 (Eng Oral)</span>
-                </div>
-
-                <div className="bg-slate-900/90 p-2.5 rounded-xl border border-indigo-500/30 text-center">
-                  <span className="block text-[10px] text-slate-400 uppercase font-bold">Spanish Class</span>
-                  <span className="font-bold text-indigo-300">Mon & Thu</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* INSTANT QUICK-ADD TO-DO BAR */}
-          <div className="glass-card rounded-xl p-5 border border-indigo-500/30 space-y-3">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Icon name="plus" className="w-4 h-4 text-indigo-400" />
-              Quick Add Homework / Task (Press Enter)
-            </h3>
-
-            <form onSubmit={handleQuickAdd} className="flex flex-col sm:flex-row gap-2">
-              <input 
-                type="text" 
-                placeholder="Type task description and press Enter..." 
-                value={newTaskTitle}
-                onChange={e => setNewTaskTitle(e.target.value)}
-                className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
-              />
-
-              <select 
-                value={newTaskSubj}
-                onChange={e => setNewTaskSubj(e.target.value)}
-                className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white"
-              >
-                <option value="DT">Design Tech</option>
-                <option value="Math">Math Higher</option>
-                <option value="Double Science">Double Science</option>
-                <option value="Economics">Economics</option>
-                <option value="History">History</option>
-                <option value="World Lit">World Lit</option>
-                <option value="Spanish">Spanish</option>
-              </select>
-
-              <select 
-                value={newTaskPriority}
-                onChange={e => setNewTaskPriority(e.target.value)}
-                className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white"
-              >
-                <option value="High">High Priority</option>
-                <option value="Medium">Medium Priority</option>
-                <option value="Low">Low Priority</option>
-              </select>
-
-              <button type="submit" className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-md shadow-indigo-600/30">
-                Add Task
-              </button>
-            </form>
-          </div>
-
-          {/* TWO COLUMN GRID: TO-DO LIST & STICKY PAD */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            {/* Daily Homework Checklist */}
-            <div className="lg:col-span-2 glass-card rounded-xl p-6 border border-slate-800 space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Icon name="check" className="w-5 h-5 text-indigo-400" />
-                  Daily Homework Checklist ({tasks.filter(t=>!t.completed).length} Pending)
-                </h3>
-              </div>
-
-              <div className="space-y-2.5">
-                {tasks.length === 0 ? (
-                  <p className="text-xs text-slate-400 italic text-center py-6">No pending homework tasks!</p>
-                ) : (
-                  tasks.map(t => (
-                    <div key={t.id} className={`p-3.5 rounded-xl border flex items-center justify-between transition ${
-                      t.completed ? 'bg-slate-950/40 border-slate-800/60 opacity-60' : 'bg-slate-900/90 border-slate-800'
-                    }`}>
-                      <div className="flex items-center gap-3">
-                        <input 
-                          type="checkbox"
-                          checked={t.completed}
-                          onChange={() => toggleTask(t.id)}
-                          className="w-4 h-4 accent-indigo-600 rounded cursor-pointer"
-                        />
-                        <div>
-                          <span className={`text-xs sm:text-sm font-semibold block ${t.completed ? 'line-through text-slate-500' : 'text-slate-100'}`}>
-                            {t.title}
-                          </span>
-                          <div className="flex gap-2 text-[10px] text-slate-400 mt-0.5">
-                            <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-semibold">{t.subject}</span>
-                            <span className={`px-2 py-0.5 rounded font-bold ${
-                              t.priority === 'High' ? 'bg-rose-500/20 text-rose-300' : 'bg-amber-500/20 text-amber-300'
-                            }`}>{t.priority}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <button onClick={() => deleteTask(t.id)} className="p-1.5 text-slate-500 hover:text-rose-400">
-                        <Icon name="trash" className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Fast Daily Sticky Notes Pad */}
-            <div className="glass-card rounded-xl p-6 border border-slate-800 space-y-3 flex flex-col">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <span className="text-lg">📌</span> Fast Sticky Notes (Auto-Saved)
-              </h3>
-              <p className="text-xs text-slate-400">Jot down quick reminders, teacher remarks, or exam formulas:</p>
-
-              <textarea 
-                value={stickyNotes}
-                onChange={e => setStickyNotes(e.target.value)}
-                placeholder="Write quick notes here..."
-                className="flex-1 w-full min-h-[180px] bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 leading-relaxed font-mono"
-              />
-            </div>
-
-          </div>
-        </div>
-      );
+    function switchSubTab(subId, btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const container = parent.parentElement;
+      container.querySelectorAll('.sub-tab-content').forEach(c => c.style.display = 'none');
+      document.getElementById(subId).style.display = 'block';
     }
 
-    // ==========================================
-    // 2. MATH HIGHER TIER TRAFFIC LIGHT SYSTEM
-    // ==========================================
-    function MathView({ mathTrafficLights, setMathTrafficLights, triggerToast }) {
-      // Calculate overall mastery percentage
-      const totalTopics = useMemo(() => {
-        let count = 0;
-        MATH_HIGHER_TOPICS.forEach(cat => count += cat.items.length);
-        return count;
-      }, []);
-
-      const greenCount = useMemo(() => {
-        return Object.values(mathTrafficLights).filter(val => val === 'green').length;
-      }, [mathTrafficLights]);
-
-      const masteryPct = Math.round((greenCount / totalTopics) * 100);
-
-      const setTrafficLight = (item, color) => {
-        setMathTrafficLights({
-          ...mathTrafficLights,
-          [item]: color
-        });
-        triggerToast(`Updated topic confidence for: ${item}`);
-      };
-
-      return (
-        <div className="space-y-6">
-          {/* HEADER BANNER */}
-          <div className="glass-card rounded-2xl p-6 border border-indigo-500/30 space-y-4">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Mathematics A Higher Tier (1HR & 2HR)</span>
-                <h2 className="text-2xl font-black text-white">Traffic Light Mastery System</h2>
-                <p className="text-xs text-slate-300">Click Red (Weak), Yellow (Medium), or Green (Mastered) for every syllabus topic.</p>
-              </div>
-
-              {/* Live Mastery Meter */}
-              <div className="bg-slate-900 p-4 rounded-xl border border-indigo-500/40 text-right min-w-[160px]">
-                <span className="block text-[10px] font-bold uppercase text-slate-400">Mastery Progress</span>
-                <span className="text-2xl font-black text-emerald-400">{masteryPct}% Mastered</span>
-                <span className="block text-[10px] text-slate-400">{greenCount} of {totalTopics} Topics Green</span>
-              </div>
-            </div>
-
-            <div className="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
-              <div className="bg-emerald-500 h-3 rounded-full transition-all duration-500" style={{ width: `${masteryPct}%` }}></div>
-            </div>
-          </div>
-
-          {/* TOPIC MODULES GRID */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {MATH_HIGHER_TOPICS.map((cat, idx) => (
-              <div key={idx} className="glass-card rounded-xl p-5 border border-slate-800 space-y-3">
-                <h3 className="text-sm font-bold text-indigo-300 uppercase tracking-wider border-b border-slate-800 pb-2">
-                  {cat.category}
-                </h3>
-
-                <div className="space-y-2.5">
-                  {cat.items.map((item) => {
-                    const currentTL = mathTrafficLights[item] || 'red';
-                    return (
-                      <div key={item} className="p-3 bg-slate-900/90 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
-                        <span className="font-semibold text-slate-200 flex-1 pr-2">{item}</span>
-
-                        {/* Traffic Light Buttons */}
-                        <div className="flex gap-1.5">
-                          <button 
-                            onClick={() => setTrafficLight(item, 'red')}
-                            className={`w-7 h-7 rounded-lg font-black transition ${
-                              currentTL === 'red' ? 'bg-rose-600 text-white shadow-md shadow-rose-600/40 scale-105' : 'bg-slate-800 text-rose-500 hover:bg-slate-700'
-                            }`}
-                          >
-                            R
-                          </button>
-                          <button 
-                            onClick={() => setTrafficLight(item, 'yellow')}
-                            className={`w-7 h-7 rounded-lg font-black transition ${
-                              currentTL === 'yellow' ? 'bg-amber-500 text-white shadow-md shadow-amber-500/40 scale-105' : 'bg-slate-800 text-amber-500 hover:bg-slate-700'
-                            }`}
-                          >
-                            Y
-                          </button>
-                          <button 
-                            onClick={() => setTrafficLight(item, 'green')}
-                            className={`w-7 h-7 rounded-lg font-black transition ${
-                              currentTL === 'green' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/40 scale-105' : 'bg-slate-800 text-emerald-500 hover:bg-slate-700'
-                            }`}
-                          >
-                            G
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
+    // Quick Add Tasks & Notes
+    function addQuickTask() {
+      const val = document.getElementById('quickTaskInput').value.trim();
+      if (!val) return;
+      state.tasks.push(val);
+      saveState();
+      document.getElementById('quickTaskInput').value = '';
+      alert('Task added successfully!');
     }
 
-    // ==========================================
-    // 3. DOUBLE SCIENCE TAB (CHEM / PHYS / BIO)
-    // ==========================================
-    function ScienceView({ scienceChecklist, setScienceChecklist, triggerToast }) {
-      const toggleSubtopic = (id) => {
-        setScienceChecklist({
-          ...scienceChecklist,
-          [id]: !scienceChecklist[id]
-        });
-        triggerToast('Science topic progress updated!');
-      };
-
-      // Calculate percentages
-      const chemTotal = 4, physTotal = 3, bioTotal = 3;
-      const chemDone = ['Chem-1','Chem-2','Chem-3','Chem-4'].filter(k => scienceChecklist[k]).length;
-      const physDone = ['Phys-1','Phys-2','Phys-3'].filter(k => scienceChecklist[k]).length;
-      const bioDone = ['Bio-1','Bio-2','Bio-3'].filter(k => scienceChecklist[k]).length;
-
-      const chemPct = Math.round((chemDone / chemTotal) * 100);
-      const physPct = Math.round((physDone / physTotal) * 100);
-      const bioPct = Math.round((bioDone / bioTotal) * 100);
-      const combinedPct = Math.round(((chemDone + physDone + bioDone) / 10) * 100);
-
-      return (
-        <div className="space-y-6">
-          <div className="glass-card rounded-2xl p-6 border border-teal-500/30 space-y-4">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Double Award Science Syllabus (R4SD0)</span>
-                <h2 className="text-2xl font-black text-white">Syllabus Revision Completion</h2>
-                <p className="text-xs text-slate-300">Priority: 1. Chemistry (Hardest) ➔ 2. Physics ➔ 3. Biology</p>
-              </div>
-
-              <div className="bg-slate-900 p-4 rounded-xl border border-teal-500/40 text-right min-w-[160px]">
-                <span className="block text-[10px] font-bold uppercase text-slate-400">Combined Science</span>
-                <span className="text-2xl font-black text-teal-400">{combinedPct}% Finished</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            {/* Chemistry (Priority 1) */}
-            <div className="glass-card rounded-xl p-5 border border-rose-500/40 space-y-4">
-              <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                <div>
-                  <h3 className="text-base font-bold text-rose-300">1. Chemistry (Hardest)</h3>
-                  <span className="text-[10px] text-slate-400">Organic, Moles & Electrolysis</span>
-                </div>
-                <span className="text-sm font-black text-rose-400">{chemPct}%</span>
-              </div>
-              <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                <div className="bg-rose-500 h-2 rounded-full" style={{ width: `${chemPct}%` }}></div>
-              </div>
-
-              <div className="space-y-2">
-                {[
-                  { id: 'Chem-1', name: 'Organic Chem (Alkanes, Alkenes, Alcohols, Polymers)' },
-                  { id: 'Chem-2', name: 'Stoichiometry, Moles & Titration Calculations' },
-                  { id: 'Chem-3', name: 'Electrolysis & Half-Equations' },
-                  { id: 'Chem-4', name: 'Energetics & Bond Energy Calculations' }
-                ].map(item => (
-                  <label key={item.id} className="flex items-center gap-2.5 p-3 bg-slate-900 rounded-lg border border-slate-800 cursor-pointer text-xs">
-                    <input type="checkbox" checked={!!scienceChecklist[item.id]} onChange={() => toggleSubtopic(item.id)} className="w-4 h-4 accent-rose-500 rounded" />
-                    <span className={scienceChecklist[item.id] ? 'line-through text-slate-500' : 'text-slate-200'}>{item.name}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Physics (Priority 2) */}
-            <div className="glass-card rounded-xl p-5 border border-indigo-500/40 space-y-4">
-              <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                <div>
-                  <h3 className="text-base font-bold text-indigo-300">2. Physics</h3>
-                  <span className="text-[10px] text-slate-400">Circuits & Electromagnetism</span>
-                </div>
-                <span className="text-sm font-black text-indigo-400">{physPct}%</span>
-              </div>
-              <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                <div className="bg-indigo-500 h-2 rounded-full" style={{ width: `${physPct}%` }}></div>
-              </div>
-
-              <div className="space-y-2">
-                {[
-                  { id: 'Phys-1', name: 'Forces & Motion (Kinematics & Momentum)' },
-                  { id: 'Phys-2', name: 'Electricity & Circuit Calculations (V=IR)' },
-                  { id: 'Phys-3', name: 'Waves, Light Refraction & Sound' }
-                ].map(item => (
-                  <label key={item.id} className="flex items-center gap-2.5 p-3 bg-slate-900 rounded-lg border border-slate-800 cursor-pointer text-xs">
-                    <input type="checkbox" checked={!!scienceChecklist[item.id]} onChange={() => toggleSubtopic(item.id)} className="w-4 h-4 accent-indigo-500 rounded" />
-                    <span className={scienceChecklist[item.id] ? 'line-through text-slate-500' : 'text-slate-200'}>{item.name}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Biology (Priority 3) */}
-            <div className="glass-card rounded-xl p-5 border border-emerald-500/40 space-y-4">
-              <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                <div>
-                  <h3 className="text-base font-bold text-emerald-300">3. Biology</h3>
-                  <span className="text-[10px] text-slate-400">Physiology & Genetics</span>
-                </div>
-                <span className="text-sm font-black text-emerald-400">{bioPct}%</span>
-              </div>
-              <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${bioPct}%` }}></div>
-              </div>
-
-              <div className="space-y-2">
-                {[
-                  { id: 'Bio-1', name: 'Genetics, DNA & Monohybrid Crosses' },
-                  { id: 'Bio-2', name: 'Human Physiology & Circulation' },
-                  { id: 'Bio-3', name: 'Ecology & Carbon Cycle' }
-                ].map(item => (
-                  <label key={item.id} className="flex items-center gap-2.5 p-3 bg-slate-900 rounded-lg border border-slate-800 cursor-pointer text-xs">
-                    <input type="checkbox" checked={!!scienceChecklist[item.id]} onChange={() => toggleSubtopic(item.id)} className="w-4 h-4 accent-emerald-500 rounded" />
-                    <span className={scienceChecklist[item.id] ? 'line-through text-slate-500' : 'text-slate-200'}>{item.name}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-          </div>
-        </div>
-      );
+    function saveStickyNotes() {
+      state.sticky = document.getElementById('stickyNotes').value;
+      saveState();
     }
 
-    // ==========================================
-    // 4. DESIGN & TECHNOLOGY (DT) SLIDE FEEDBACK HUB
-    // ==========================================
-    function DtView({ dtSlides, setDtSlides, triggerToast, triggerConfetti }) {
-      const [newSlide, setNewSlide] = useState({ slideNum: '', title: '', summary: '', comment: '' });
-
-      const handleAddSlide = (e) => {
-        e.preventDefault();
-        if (!newSlide.slideNum || !newSlide.title) return;
-        const created = {
-          id: 'sl-' + Date.now(),
-          slideNum: newSlide.slideNum,
-          title: newSlide.title,
-          summary: newSlide.summary,
-          comment: newSlide.comment,
-          status: 'Fixes Pending',
-          checklist: [{ text: 'Address teacher feedback comments', done: false }]
-        };
-        setDtSlides([...dtSlides, created]);
-        setNewSlide({ slideNum: '', title: '', summary: '', comment: '' });
-        triggerToast('Slide feedback entry created!');
-      };
-
-      const setStatus = (id, status) => {
-        const updated = dtSlides.map(s => {
-          if (s.id === id) {
-            if (status === 'Grade 9 Standard') triggerConfetti();
-            return { ...s, status };
-          }
-          return s;
-        });
-        setDtSlides(updated);
-        triggerToast(`Slide standard set to ${status}`);
-      };
-
-      return (
-        <div className="space-y-6">
-          <div className="glass-card rounded-2xl p-6 border border-amber-500/40 bg-gradient-to-r from-amber-950/20 to-slate-900 space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Design & Technology NEA (Coursework)</span>
-            <h2 className="text-2xl font-black text-white">Slide Feedback & Grade 9 Fix Tracker</h2>
-            <p className="text-xs text-slate-300">Sprint Target: Finish Section D & refine portfolio slides to Grade 9 standard by end of Challenge Week!</p>
-          </div>
-
-          {/* ADD SLIDE FEEDBACK FORM */}
-          <div className="glass-card rounded-xl p-6 border border-slate-800 space-y-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <Icon name="plus" className="w-4 h-4 text-amber-400" />
-              Add Teacher Slide Feedback
-            </h3>
-
-            <form onSubmit={handleAddSlide} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input type="text" placeholder="Slide # (e.g. 15)" required value={newSlide.slideNum} onChange={e => setNewSlide({...newSlide, slideNum: e.target.value})} className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white" />
-              <input type="text" placeholder="Slide Title" required value={newSlide.title} onChange={e => setNewSlide({...newSlide, title: e.target.value})} className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white sm:col-span-2" />
-              <input type="text" placeholder="Slide Contents / Summary" value={newSlide.summary} onChange={e => setNewSlide({...newSlide, summary: e.target.value})} className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white sm:col-span-3" />
-              <textarea placeholder="Teacher Comment / Feedback" value={newSlide.comment} onChange={e => setNewSlide({...newSlide, comment: e.target.value})} className="bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-white sm:col-span-3 min-h-[60px]" />
-
-              <button type="submit" className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-lg">
-                Save Feedback Entry
-              </button>
-            </form>
-          </div>
-
-          {/* SLIDES FEEDBACK LIST */}
-          <div className="space-y-4">
-            {dtSlides.map(sl => (
-              <div key={sl.id} className="glass-card rounded-xl p-5 border border-slate-800 space-y-3">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-bold text-xs">Slide {sl.slideNum}</span>
-                    <h4 className="text-base font-bold text-white">{sl.title}</h4>
-                  </div>
-
-                  {/* Standard selector */}
-                  <div className="flex gap-1.5 text-xs">
-                    {['Drafting', 'Fixes Pending', 'Grade 9 Standard'].map(st => (
-                      <button
-                        key={st}
-                        onClick={() => setStatus(sl.id, st)}
-                        className={`px-3 py-1 rounded-lg font-bold transition ${
-                          sl.status === st
-                            ? st === 'Grade 9 Standard' ? 'bg-emerald-600 text-white' : 'bg-amber-600 text-white'
-                            : 'bg-slate-800 text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        {st}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <p className="text-xs text-slate-300"><strong>Summary:</strong> {sl.summary}</p>
-                
-                {sl.comment && (
-                  <div className="p-3 bg-amber-950/20 border border-amber-500/30 rounded-lg text-xs text-amber-200">
-                    <strong>Teacher Remarks:</strong> “{sl.comment}”
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    // ==========================================
-    // 5. HISTORY TAB (ESSAY TRANSCRIPTS & RUBRIC)
-    // ==========================================
-    function HistoryView({ historyEssays, setHistoryEssays, triggerToast }) {
-      const [newEssay, setNewEssay] = useState({ topic: 'Change in China 1945-89', title: '', markScheme: '16', responseText: '' });
-
-      const handleAddEssay = (e) => {
-        e.preventDefault();
-        if (!newEssay.title || !newEssay.responseText) return;
-        const entry = {
-          ...newEssay,
-          id: 'he-' + Date.now(),
-          teacherMark: 'Pending Review',
-          teacherFeedback: 'Awaiting teacher feedback.'
-        };
-        setHistoryEssays([entry, ...historyEssays]);
-        setNewEssay({ topic: 'Change in China 1945-89', title: '', markScheme: '16', responseText: '' });
-        triggerToast('Transcribed essay response saved!');
-      };
-
-      return (
-        <div className="space-y-6">
-          <div className="glass-card rounded-2xl p-6 border border-rose-500/40 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-rose-400">History (R4HI1) Practice Hub</span>
-            <h2 className="text-2xl font-black text-white">Transcribed Exam Practice Responses</h2>
-            <p className="text-xs text-slate-300">4 Topics: China 1945-89, Germany 1918-45, WWI 1890-1918, USA 1924-41</p>
-          </div>
-
-          {/* ADD ESSAY FORM */}
-          <div className="glass-card rounded-xl p-6 border border-slate-800 space-y-4">
-            <h3 className="text-base font-bold text-white">Transcribe Essay Practice Response</h3>
-
-            <form onSubmit={handleAddEssay} className="space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <select value={newEssay.topic} onChange={e => setNewEssay({...newEssay, topic: e.target.value})} className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
-                  <option value="Change in China 1945-89">Change in China 1945-89</option>
-                  <option value="Development of Dictatorship Germany 1918-45">Dictatorship Germany 1918-45</option>
-                  <option value="Causes & Course of WWI 1890-1918">WWI 1890-1918</option>
-                  <option value="USA 1924-41">USA 1924-41</option>
-                </select>
-
-                <select value={newEssay.markScheme} onChange={e => setNewEssay({...newEssay, markScheme: e.target.value})} className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
-                  <option value="6">6 Marks</option>
-                  <option value="8">8 Marks</option>
-                  <option value="12">12 Marks</option>
-                  <option value="16">16 Marks (Essay)</option>
-                </select>
-
-                <input type="text" placeholder="Question Title / Prompt" required value={newEssay.title} onChange={e => setNewEssay({...newEssay, title: e.target.value})} className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white" />
-              </div>
-
-              <textarea placeholder="Paste or type full transcribed essay response..." required value={newEssay.responseText} onChange={e => setNewEssay({...newEssay, responseText: e.target.value})} className="w-full min-h-[140px] bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-white" />
-
-              <button type="submit" className="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-lg">
-                Save Essay Response
-              </button>
-            </form>
-          </div>
-
-          {/* ESSAYS LIST */}
-          <div className="space-y-4">
-            {historyEssays.map(he => (
-              <div key={he.id} className="glass-card rounded-xl p-5 border border-slate-800 space-y-3">
-                <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                  <div>
-                    <span className="text-[10px] font-bold text-rose-400 uppercase">{he.topic} • {he.markScheme} Marks</span>
-                    <h4 className="text-base font-bold text-white">{he.title}</h4>
-                  </div>
-                  <span className="px-3 py-1 bg-slate-800 border border-slate-700 text-indigo-300 rounded-lg text-xs font-bold">{he.teacherMark}</span>
-                </div>
-
-                <div className="p-3 bg-slate-950/60 rounded-lg text-xs text-slate-300 leading-relaxed font-serif italic max-h-40 overflow-y-auto">
-                  “{he.responseText}”
-                </div>
-
-                <p className="text-xs text-amber-300"><strong>Teacher Feedback:</strong> {he.teacherFeedback}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    // ==========================================
-    // 6. WORLD LITERATURE TAB (*THE CHERRY ORCHARD*)
-    // ==========================================
-    function WorldLitView({ triggerToast }) {
-      const [cardIndex, setCardIndex] = useState(0);
-      const [flipped, setFlipped] = useState(false);
-
-      const currentQuote = CHERRY_ORCHARD_QUOTES[cardIndex];
-
-      return (
-        <div className="space-y-6">
-          <div className="glass-card rounded-2xl p-6 border border-violet-500/40 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-violet-400">World Literature (0408) Set Text</span>
-            <h2 className="text-2xl font-black text-white">The Cherry Orchard by Anton Chekhov</h2>
-            <p className="text-xs text-slate-300">Quote Bank Flashcards & Grade 9 Chekhovian Techniques Masterclass</p>
-          </div>
-
-          {/* FLASHCARD REVISION SECTION */}
-          <div className="glass-card rounded-xl p-6 border border-slate-800 space-y-4 text-center">
-            <h3 className="text-base font-bold text-white flex items-center justify-center gap-2">
-              <Icon name="feather" className="w-5 h-5 text-violet-400" />
-              Interactive Quotation Flashcard ({cardIndex + 1} of {CHERRY_ORCHARD_QUOTES.length})
-            </h3>
-
-            <div 
-              onClick={() => setFlipped(!flipped)}
-              className={`flip-card max-w-xl mx-auto min-h-[180px] cursor-pointer rounded-2xl border p-6 flex items-center justify-center transition-all ${
-                flipped ? 'bg-violet-950/40 border-violet-500/50' : 'bg-slate-900 border-slate-700'
-              }`}
-            >
-              {!flipped ? (
-                <div>
-                  <span className="text-[10px] font-bold uppercase text-slate-400 block mb-2">{currentQuote.speaker} • {currentQuote.act}</span>
-                  <p className="text-base italic font-serif text-amber-200">“{currentQuote.quote}”</p>
-                  <span className="text-[10px] text-slate-500 block mt-4">(Click card to flip for analysis)</span>
-                </div>
-              ) : (
-                <div>
-                  <span className="text-[10px] font-bold uppercase text-violet-400 block mb-2">Theme: {currentQuote.theme}</span>
-                  <p className="text-xs text-slate-200">{currentQuote.note}</p>
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-center gap-3">
-              <button 
-                onClick={() => { setFlipped(false); setCardIndex((cardIndex - 1 + CHERRY_ORCHARD_QUOTES.length) % CHERRY_ORCHARD_QUOTES.length); }}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-lg"
-              >
-                Previous Quote
-              </button>
-              <button 
-                onClick={() => { setFlipped(false); setCardIndex((cardIndex + 1) % CHERRY_ORCHARD_QUOTES.length); }}
-                className="px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold rounded-lg"
-              >
-                Next Quote
-              </button>
-            </div>
-          </div>
-
-          {/* CHEKHOVIAN TECHNIQUES MASTERCLASS */}
-          <div className="glass-card rounded-xl p-6 border border-slate-800 space-y-4">
-            <h3 className="text-base font-bold text-white">Chekhovian Dramatic Techniques & Grade 9 Authorial Intent</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {CHEKHOV_TECHNIQUES.map((tech, i) => (
-                <div key={i} className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1">
-                  <h4 className="text-sm font-bold text-violet-300">{tech.title}</h4>
-                  <p className="text-xs text-slate-300">{tech.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // ==========================================
-    // 7. SPANISH TAB (CLASSES & 20 DAILY VOCAB CHURNER)
-    // ==========================================
-    function SpanishView({ vocabList, setVocabList, vocabStreak, setVocabStreak, triggerToast, triggerConfetti }) {
-      const [cardIndex, setCardIndex] = useState(0);
-      const [flipped, setFlipped] = useState(false);
-
-      const currentVocab = vocabList[cardIndex];
-
-      const toggleLearned = (id) => {
-        const updated = vocabList.map(v => v.id === id ? { ...v, learned: !v.learned } : v);
-        setVocabList(updated);
-        triggerToast('Vocab status updated!');
-      };
-
-      return (
-        <div className="space-y-6">
-          <div className="glass-card rounded-2xl p-6 border border-yellow-500/40 space-y-3">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Spanish (R4SP1) Prep</span>
-                <h2 className="text-2xl font-black text-white">Daily 20 Vocab Churner</h2>
-                <p className="text-xs text-slate-300">Class Schedule: <strong>Mon 6:00 - 7:00 PM</strong> | <strong>Thu 8:00 - 9:00 PM</strong></p>
-              </div>
-
-              <div className="bg-slate-900 p-3.5 rounded-xl border border-amber-500/40 text-center">
-                <span className="block text-[10px] font-bold uppercase text-slate-400">Daily Streak</span>
-                <span className="text-xl font-black text-amber-400 flex items-center justify-center gap-1">
-                  <Icon name="fire" className="w-5 h-5 text-amber-500" />
-                  {vocabStreak} Days
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* 20 VOCAB FLIP CARD CHURNER */}
-          <div className="glass-card rounded-xl p-6 border border-slate-800 text-center space-y-4">
-            <h3 className="text-base font-bold text-white">Vocab Card {cardIndex + 1} of {vocabList.length}</h3>
-
-            <div 
-              onClick={() => setFlipped(!flipped)}
-              className={`max-w-md mx-auto min-h-[160px] cursor-pointer rounded-2xl border p-6 flex flex-col items-center justify-center transition-all ${
-                flipped ? 'bg-amber-950/30 border-amber-500/50' : 'bg-slate-900 border-slate-700'
-              }`}
-            >
-              {!flipped ? (
-                <div>
-                  <span className="text-[10px] font-bold uppercase text-slate-400 block mb-2">{currentVocab.theme}</span>
-                  <span className="text-2xl font-black text-amber-300">{currentVocab.es}</span>
-                  <span className="text-[10px] text-slate-500 block mt-3">(Click to reveal English)</span>
-                </div>
-              ) : (
-                <div>
-                  <span className="text-[10px] font-bold uppercase text-emerald-400 block mb-2">English Meaning</span>
-                  <span className="text-xl font-bold text-white">{currentVocab.en}</span>
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-center gap-3">
-              <button 
-                onClick={() => { setFlipped(false); setCardIndex((cardIndex - 1 + vocabList.length) % vocabList.length); }}
-                className="px-4 py-2 bg-slate-800 text-slate-200 text-xs font-bold rounded-lg"
-              >
-                Previous
-              </button>
-              <button 
-                onClick={() => toggleLearned(currentVocab.id)}
-                className={`px-4 py-2 text-xs font-bold rounded-lg ${
-                  currentVocab.learned ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300'
-                }`}
-              >
-                {currentVocab.learned ? '✓ Learned' : 'Mark Learned'}
-              </button>
-              <button 
-                onClick={() => { setFlipped(false); setCardIndex((cardIndex + 1) % vocabList.length); }}
-                className="px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-lg"
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // ==========================================
-    // 8. SPORTS & VEGETARIAN NUTRITION TAB
-    // ==========================================
-    function SportsNutritionView({ boxingLogs, setBoxingLogs, proteinIntake, setProteinIntake, dailyProteinGoal, triggerToast, triggerConfetti }) {
-      const [customMealProtein, setCustomMealProtein] = useState('');
-
-      const logBoxingSession = () => {
-        const today = new Date().toISOString().split('T')[0];
-        setBoxingLogs([{ date: today, attended: true }, ...boxingLogs]);
-        triggerConfetti();
-        triggerToast('Logged today\'s boxing session!');
-      };
-
-      const addProtein = (grams) => {
-        setProteinIntake(prev => Math.min(200, prev + grams));
-        triggerToast(`Added +${grams}g protein!`);
-        if (proteinIntake + grams >= dailyProteinGoal) triggerConfetti();
-      };
-
-      return (
-        <div className="space-y-6">
-          <div className="glass-card rounded-2xl p-6 border border-emerald-500/40 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">Personal Fitness & Wellness</span>
-            <h2 className="text-2xl font-black text-white">Boxing Consistency & Vegetarian Protein Tracker</h2>
-            <p className="text-xs text-slate-300">Target: Stay consistent with Wednesday, Friday, Saturday 7-8 PM Boxing & hit 100g daily protein.</p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            {/* BOXING CONSISTENCY TRACKER */}
-            <div className="glass-card rounded-xl p-6 border border-slate-800 space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Icon name="dumbbell" className="w-5 h-5 text-indigo-400" />
-                  Boxing Schedule & Attendance Log
-                </h3>
-              </div>
-
-              <div className="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2 text-xs">
-                <p className="font-bold text-indigo-300">Scheduled Sessions:</p>
-                <ul className="list-disc list-inside text-slate-300 space-y-1">
-                  <li>Wednesday: 7:00 PM - 8:00 PM</li>
-                  <li>Friday: 7:00 PM - 8:00 PM</li>
-                  <li>Saturday: 7:00 PM - 8:00 PM</li>
-                </ul>
-              </div>
-
-              <button 
-                onClick={logBoxingSession}
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl shadow-lg shadow-indigo-600/30"
-              >
-                🥊 Check-In Today's Boxing Session
-              </button>
-            </div>
-
-            {/* VEGETARIAN PROTEIN TRACKER */}
-            <div className="glass-card rounded-xl p-6 border border-slate-800 space-y-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-base font-bold text-white">Vegetarian Daily Protein Goal</h3>
-                  <span className="text-xs text-emerald-400 font-bold">{proteinIntake} / {dailyProteinGoal}g</span>
-                </div>
-                <button 
-                  onClick={() => setProteinIntake(0)}
-                  className="text-[10px] text-slate-400 hover:text-white"
-                >
-                  Reset Today
-                </button>
-              </div>
-
-              <div className="w-full bg-slate-800 h-3.5 rounded-full overflow-hidden">
-                <div className="bg-emerald-500 h-3.5 rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (proteinIntake/dailyProteinGoal)*100)}%` }}></div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-2 text-xs">
-                <button onClick={() => addProtein(25)} className="p-2.5 bg-slate-900 border border-slate-700 hover:border-emerald-500 rounded-lg text-slate-200 font-bold">
-                  +25g Protein Shake
-                </button>
-                <button onClick={() => addProtein(20)} className="p-2.5 bg-slate-900 border border-slate-700 hover:border-emerald-500 rounded-lg text-slate-200 font-bold">
-                  +20g Tofu / Tempeh
-                </button>
-                <button onClick={() => addProtein(15)} className="p-2.5 bg-slate-900 border border-slate-700 hover:border-emerald-500 rounded-lg text-slate-200 font-bold">
-                  +15g Paneer / Yogurt
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-          {/* HIGH PROTEIN CHEAT SHEET */}
-          <div className="glass-card rounded-xl p-6 border border-slate-800 space-y-3">
-            <h3 className="text-base font-bold text-white">Vegetarian High-Protein Food Cheat Sheet</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-              {VEGETARIAN_PROTEIN_SOURCES.map((item, i) => (
-                <div key={i} className="bg-slate-900 p-3.5 rounded-xl border border-slate-800 space-y-1">
-                  <span className="font-bold text-emerald-300 block">{item.food}</span>
-                  <span className="text-xs font-bold text-white block">{item.protein}</span>
-                  <p className="text-[10px] text-slate-400">{item.note}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // ==========================================
-    // 9. CALENDAR & COUNTDOWN VIEW
-    // ==========================================
-    function CalendarView({ exams, holidays, classes }) {
-      return (
-        <div className="space-y-6">
-          <div className="glass-card rounded-2xl p-6 border border-slate-800 space-y-2">
-            <h2 className="text-2xl font-black text-white">Master IGCSE Exam & Holiday Schedule</h2>
-            <p className="text-xs text-slate-300">All 15 Exam Papers, KGV Winter Break, November Trip & Mocks</p>
-          </div>
-
-          <div className="glass-card rounded-xl p-6 border border-slate-800 space-y-4">
-            <h3 className="text-base font-bold text-white">Key Academic Milestones Timeline</h3>
-            <div className="space-y-3">
-              {holidays.map(h => (
-                <div key={h.id} className={`p-4 rounded-xl border flex justify-between items-center ${h.color}`}>
-                  <div>
-                    <span className="text-xs font-bold uppercase">{h.category}</span>
-                    <h4 className="text-sm font-bold">{h.title}</h4>
-                    <p className="text-xs opacity-80">{h.start} to {h.end}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Render React Application
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
-</body>
-</html>
+    // Pomodoro Timer
+    let pomoInterval;
+    let pomoTime = 25 * 60;
+    function startPomodoro() {
+      clearInterval(pomoInterval);
+      pomoInterval = setInterval
